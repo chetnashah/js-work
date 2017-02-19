@@ -1,0 +1,6 @@
+
+
+var zoo = require('./zoo');
+
+var dd = new zoo('lab');
+dd.bark();
