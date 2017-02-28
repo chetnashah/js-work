@@ -1,6 +1,9 @@
 
 https://github.com/Microsoft/ChakraCore/wiki/JavaScript-Runtime-%28JSRT%29-Overview#concepts
 
+v8 bindings explaination : 
+https://chromium.googlesource.com/chromium/src/third_party/+/master/WebKit/Source/bindings/core/v8/V8BindingDesign.md
+
 Every Javascript engine will expose API around some of the following
 concepts:
 

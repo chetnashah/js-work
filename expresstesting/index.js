@@ -30,4 +30,12 @@ app.delete('/user', function (req, res) {
     res.send(' Got delete request for user');
 });
 
+// 2. Route paths and route parameters, paths are matched against incoming urls
+app.get('/users/:userId/books/:bookId', function(req, res) {
+    res.send(req.params);// object { user : userId , book: bookId} is captured in req.params
+
+});
+
+
+
 
