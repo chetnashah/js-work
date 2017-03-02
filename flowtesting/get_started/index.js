@@ -62,6 +62,34 @@ let a2 : NumArray = [1,2,3,5,6,7,5.12,2.22];
 let double : TimesTwo = (x) => (x * 2);
 let p1 : Person = { name: 'cc', age: 100 };
 
+/* 6. matching an object shape */
+let object: { foo: string, bar: number } = { foo : "foo", bar : 0};
+// note : to match shape, there should be atleast as many property in type.
+// e.g. in above variable if you remove foo or bar , it won't type check.
+// but you can add more properties and it will still type check correctly
+
+
+/* 7. using objects as property value pairs */
+// objects in javascript are object value pairs and to
+// restrict property types and value types following syntax is used.
+let coolRating: {[id:string]: number} = {}; // the [] in type signature means it is indexable
+coolRating["sam"] = 10; // Yes, it's a 0-10 scale.
 
 
 
+/* Classes as types */
+//Defining a class also defines a type(Gotcha!!) and it can be used
+// to type check instances of teh class
+class MyClass {
+    foo: string;
+    constructor(foo: string) {
+        this.foo = foo;
+    }
+    bar(): string {
+        return this.foo;
+    }
+}
+
+var myInstance: MyClass = new MyClass("hi");
+(myInstance.foo : string);
+(myInstance.bar() : string);
