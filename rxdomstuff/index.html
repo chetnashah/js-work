@@ -1,0 +1,63 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <input id="input" type="text"></input>
+    <ul id="results"></ul>
+  
+      <!-- this is how you quickly do html only projects with using js files from node modules -->
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="./node_modules/rx/dist/rx.all.js"></script>
+    <script src="./node_modules/rx-dom/dist/rx.dom.js"></script>
+    <script type="text/javascript">
+      var input = $('#input');
+      var results = $('#results');
+      var throttledInput = Rx.Observable.fromEvent(input, 'keyup')
+	      .pluck('target','value')
+	      .filter( function (text) {
+		      return text.length > 2;
+	      })
+	      .debounce(500)
+	      .distinctUntilChanged()
+        .do(console.log);
+      
+      var searchWikipedia = function(term){
+        return $.ajax({
+          url: 'https://en.wikipedia.org/w/api.php',
+          dataType: 'jsonp',
+          data: {
+            action: 'opensearch',
+            format: 'json',
+            search: term
+          }
+        }).promise().then(function(value){
+          console.log('value = ', value);
+          return value;
+        });// the promise holds an array of values
+      }
+
+      var suggestions = throttledInput.concatMap(searchWikipedia);
+    
+      suggestions.subscribe(
+        function(data) {
+          console.log('data = ', data);
+          console.log('results = ', results);
+         results
+          .empty()
+          .append ($.map(data[1], function (v) { 
+            return $('<li>').text(v); 
+          }));
+        },
+        function(error) {
+          console.log('error = ', error);
+          return results.empty()
+          .append($('<li>'))
+          .text(`Error: ${error}`);
+        },
+        function(completed) {
+          console.log('completed');
+        }
+      );
+    </script>
+  </body>
+</html>

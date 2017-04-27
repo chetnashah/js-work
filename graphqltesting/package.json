@@ -1,0 +1,20 @@
+{
+  "name": "graphqltesting",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel index.js schema.js test.js -d lib"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express-graphql": "^0.6.4",
+    "graphql": "^0.9.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.4.0"
+  }
+}
