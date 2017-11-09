@@ -95,7 +95,7 @@ b1.describe();
 // i.e. Book.prototype is plain old object to hold stuff that instances will need.
 // where as Book.__prototype__ is a Function.prototype that has stuff like call,bind etc.
 
-// 4. PseudoClassical pattern 
+// 4. PseudoClassical pattern (use of this)
 // (trying to copy class constructors look like in other languages e.g. Java)
 // introduces keyword "new", the function runs in constructor mode, 
 // and so we have to omit creating instance ourselves, 
@@ -120,3 +120,28 @@ Point.prototype.print = function(){
 
 var pp1 = new Point(3,4);
 pp1.print();
+
+
+// ------------------ superclassing and subclassing ----------------------
+
+
+//1. simple subclassing
+// MotorBike <: Bike
+var Bike = function(loc) {
+    var obj = {loc: loc};
+    obj.move = function() {
+        obj.loc++;
+    }
+    return obj;
+}
+
+var MotorBike = function(loc) {
+    // superclass hands us an object
+    var obj = Bike(loc);
+
+    // Now we add functionality specific to this class
+    obj.grab = function() { /*  */ }
+    return obj; 
+}
+
+// 2. pseudoclassical (use of this) subclassing
