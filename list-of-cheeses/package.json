@@ -1,0 +1,19 @@
+{
+  "name": "list-of-cheeses",
+  "version": "1.0.1",
+  "description": "A list of well known cheeses.",
+  "main": "src/index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "echo \"Prepublish-ing\"",
+    "install": "echo \"install-ing\""
+  },
+  "keywords": [
+    "\"cheeses\""
+  ],
+  "author": "chet",
+  "license": "ISC"
+}
