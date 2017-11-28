@@ -235,3 +235,36 @@ let usr = { name: 'haka', name: 'loka', age: 11 }; // loka is considered for nam
 console.log(usr);
 
 
+console.log('=====================Destructuring test==========================');
+
+const circle = {
+  radius: 10,
+  color: 'orange',
+  getArea() {
+    return Math.PI * this.radius * this.radius;
+  },
+  getCircumference() {
+    return 2 * Math.PI * this.radius;
+  }
+};
+
+console.log(circle.getArea());
+
+try {
+  const areacalc = circle.getArea;
+  console.log(areacalc());// callsite this is global which does not have radius.
+} catch (e) {
+  console.log('try to access this.radius from a renamed function, callsite matters ::: ', e);
+}
+
+
+
+// "this" is not preserved on destructuring returning functions
+try {
+  let {radius, getArea, getCircumference} = circle;
+  let ans = getArea();
+} catch (e) {
+  console.log('tried to access this of a destructured function ', e);
+}
+
+console.log('===============================================');

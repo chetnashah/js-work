@@ -1,5 +1,5 @@
 /* @flow */
-const k: string = '3';
+const k = '3';
 console.log("running src/index.js");
 
 // template literals

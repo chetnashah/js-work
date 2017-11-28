@@ -1,3 +1,5 @@
+'use strict';
+
 // code unit is 16 bits, string.length returns no. of code units.
 
 // codepoint is what unicode defines as a unique identifier
@@ -8,24 +10,26 @@
 
 var fs = require('fs');
 
-let i =0;
+var i = 0;
 
-let arr = [];
-let base = 0x0a80;
-for(i = 0; i<10000; i++) {
+var arr = [];
+var base = 0x0a80;
+for (i = 0; i < 10000; i++) {
   arr.push(String.fromCodePoint(base + i));
 }
 // console.log('arr = ', arr);
-const charstring = arr.reduce((a, b) => (a + b));
+var charstring = arr.reduce(function (a, b) {
+  return a + b;
+});
 
 // console.log(charstring);
 
-fs.writeFile('message.txt', charstring, 'utf8', (err) => {
+fs.writeFile('message.txt', charstring, 'utf8', function (err) {
   if (err) throw err;
   console.log('The file has been saved!');
 });
 
-let testChar = "ખ"; // bmp char
+var testChar = "ખ"; // bmp char
 console.log("bmp testchar.length = ", testChar.length);
-let testChar2 = "𠮷"; // non bmp char - has surrogate pairs
+var testChar2 = "𠮷"; // non bmp char - has surrogate pairs
 console.log("non bmp testchar2.length = ", testChar2.length);
