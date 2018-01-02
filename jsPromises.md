@@ -103,8 +103,53 @@ readFile2(fileName) {
 }
 ```
 
+### Generator function and generator objects
+
+Facebook's tool regenerator allows us to run generator code 
+in ES5 environments.
+
+A Generator function is a function which when called returns a generator.
+The syntax is usually `function *genFun(){ // stuff }`.
+Generator functions are functions that can be paused or resumed,
+
+A Generator object is return on calling the generator function.
+`let genObj = genFun()`. No code in genFun is executed, until `genObj.next` is called.
+A Generator object confirms to both iterable and iterator protocol.
+
+``` js
+function* gen() { 
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+var g = gen(); // "Generator { }"
+const first = g.next()i; // {value: 1, done: false}, g is an iterator
+
+for (var i of g) {// g is iterable, so we can use for-of loop
+    console.log(i);// prints 2 and 3, because 1 is already iterated over
+}
+
+```
+
+When `yeild;` is done without any value in gen fn,
+the .next() returns { value: undefined, done: trueorfalse }
+
+Generator can play three roles:
+1. iterators (data producers) : return value via yield on each call to next.
+
+2. observers (data consumers): take in values via a parameter to next, which is received in genfun as a return value from yeild.
+
+3. coroutines - iterators and observers combine to be coroutines.
+
+
 ### Async/Await and their roles with promises.
 
-Every async function you write will return a promise,
+https://developers.google.com/web/fundamentals/primers/async-functions
+
+Every async function you write will return a promise, and that promise
+resolves with whatever async function returns or rejects with whatever
+async function throws.
+
 and every single thing you await will ordinarily be a promise.
 
