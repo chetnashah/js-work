@@ -272,6 +272,11 @@ Idiomatic key/value iteration with a map using destructuring:
 for (let [key, value] of map.entries()) {
     console.log(key, value);
 }
+// or like this
+for (const member of map) {
+  const [key, value] = member;
+  console.log(key, value);
+}
 ```
 
 **Useful Methods** - `m.set(key,value)` for setting up key value pairs. 
