@@ -290,8 +290,8 @@ var circle = {
 console.log(circle.getArea());
 
 try {
-  var areacalc = circle.getArea.bind(circle);
-  console.log(areacalc());
+  var areacalc = circle.getArea;
+  console.log(areacalc()); // callsite this is global which does not have radius.
 } catch (e) {
   console.log('try to access this.radius from a renamed function, callsite matters ::: ', e);
 }
