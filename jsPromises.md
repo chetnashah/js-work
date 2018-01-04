@@ -28,6 +28,23 @@ resolved to a promise that is pending.
 
 An unresolved promise is always in pending state. A resolved promise may be in pending, fullfilled or rejected state as mentioned in above three sentences.
 
+### Thenable Gotchas
+Whenever you return (non-promise value) inside of onFullfilled or onRejected automatically gets converted to promises and passed down the chain.
+
+But if you return a promise e.g. via Promise.resolve or Promise.reject, it is passed as it is.
+
+If you don't return anything a promise resolved with undefined value is passed onto next then block.
+
+``` js
+const p3 = Promise.resolve('aha');
+p3.then(function(){
+    console.log('pass');
+    return Promise.resolve(42);
+}, function(){
+    console.log('fail');
+    return Promise.resolve(0);
+});
+```
 
 ### Promise.resolve method
 
@@ -63,6 +80,28 @@ If something is undefined, it is JS error and turned into rejection,
 or if something is a promise that is rejected.
 
 You can resolve a value without worrying if it's a value, a promise, or a promise that resolves to a promise that resolves to a promise etc etc.
+
+### Use cases for Promise.resolve and Promise.reject
+
+Promise.resolve is useful to make a promise of a non-promise value you already have.
+Promise.resolve is useful in making a promise which is inside some other promise given to us by some library etc.
+
+Promise.resolve & Promise.reject (they are new promises with executors that don't do any computation but straight out call resolve or reject with value provided) are also useful inside thenables, i.e. when you yourself have not made a promise with an executor. but want to change values within the chain.
+e.g.
+``` js
+let p2 = Promise.resolve('32');
+p2.then(function(value) {
+    console.log(value);
+    return Promise.reject('oops');
+}).then(
+    function(v){ console.log('yaay');},
+    function(k) { console.log(k+'nooo'); }
+    );
+```
+### Promise onRejected vs catch
+
+`p.catch(function f(e){ //stuff })`
+is just sugar for `p.then(null, function f(e){ //stuff })`.
 
 
 ### Promise scheduling
