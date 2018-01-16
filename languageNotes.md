@@ -267,6 +267,9 @@ because `m.entries === m[Symbol.iterator]`
 `m.keys()` return an iterable over keys in map.
 `m.values()` return an iterable over values in the map.
 
+`m.set(key, value)` to setup a key value pair,
+`m.get(key)` to get value corresponding to given key.
+
 Idiomatic key/value iteration with a map using destructuring:
 ``` js
 for (let [key, value] of map.entries()) {
