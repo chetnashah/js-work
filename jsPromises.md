@@ -228,6 +228,87 @@ for (let [key,value] of objectEntries(jane)) {
 // last: Doe
 ```
 
+### yield limitations
+
+You can only use `yield` keyword inside generator functions, not inside regular functions or arrow functions, it will be a SyntaxError.
+
+### yield* keyword
+
+the `yield *` keyword takes an iterable and spreads out yield over
+each one of them.
+
+e.g.
+``` js
+function* foo(){
+    yield 1;
+    yield 2;
+}
+
+function* bar() {
+    yield 'a';
+    yield* ['of','tho'];
+    yield* foo();
+    yield 'z';
+}
+
+let arr = [...bar()]; // ['a', 'of', 'tho', 1, 2, 'z']
+// yield* iterable converts to
+// for (let value of iterable)
+// { yield value; }
+```
+
+`yield *` also considers end-of-iteration values, i.e. values given with done: true, as a part. 
+e.g. let's say we have generator whose last statement is return, then
+if this genobj is passed to yield*, yield* will also do yield for the last return value.
+
+e.g.
+``` js
+function* genfwithreturn() {
+    yield 'a';
+    yield 'b';
+    return 'theres'; 
+}
+function* logreturned(genobj) {
+    let result = yield* genobj;
+}
+for(let v of logreturned(genfwithreturn())) { 
+    console.log(v); // 'a', 'b', 'theres'
+}
+```
+
+### role of first .next() called on generator object
+
+When using a generator as an observer, 
+it is important to note that 
+the only purpose of the first invocation of next() 
+is to start the observer
+
+### The actual generator interface.
+
+``` js
+interface Iterator { // data producer
+    next() : IteratorResult;
+    return?(value? : any) : IteratorResult;
+}
+
+interface Observer { // data consumer
+    next(value? : any) : void;
+    return(value? : any) : void;
+    throw(error) : void;
+}
+// Generator interface is combination of both
+interface Generator {
+    // also in here somewhere [Symbol.Iterator]()
+    next(value? : any) : IteratorResult;
+    throw(value? : any) : IteratorResult;
+    return(value? : any) : IteratorResult;
+}
+interface IteratorResult {
+    value : any;
+    done : boolean;
+}
+```
+
 ### Async/Await and their roles with promises.
 
 https://developers.google.com/web/fundamentals/primers/async-functions
