@@ -76,12 +76,30 @@ console.log(iterator.next().value); // 185
 console.log(iterator.next()); // { value: undefined, done: true }
 ```
 
+In summary, the iterator interfaces are shown as below :
+``` js
+interface Iterable {
+    [Symbol.iterator]() : Iterator;
+}
+interface Iterator {
+    next() : IteratorResult;
+    return?(value? : any) : IteratorResult;
+}
+interface IteratorResult {
+    value : any;
+    done : boolean;
+}
+```
 
 ##### Spread operator
 
-* Spread operator works for expanding all iterables(Array, Set, Map)
+* Spread operator works for expanding all iterables(Array, Set, Map, Generator objects)
 
 * Spread operator is also defined for objects
+
+#### What are constructs that can be used when working with iterables?
+
+Ans: `for-of` loop and `...iterable` i.e spread operator.
 
 #### Destructuring
 

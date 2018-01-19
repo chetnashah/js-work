@@ -163,7 +163,7 @@ function* gen() {
 }
 
 var g = gen(); // "Generator { }"
-const first = g.next()i; // {value: 1, done: false}, g is an iterator
+const first = g.next(); // {value: 1, done: false}, g is an iterator
 
 for (var i of g) {// g is iterable, so we can use for-of loop
     console.log(i);// prints 2 and 3, because 1 is already iterated over
@@ -181,6 +181,52 @@ Generator can play three roles:
 
 3. coroutines - iterators and observers combine to be coroutines.
 
+#### Generator functions with yeild and return
+
+**Note** : iterable utilities like `for-of` loop and spread operator ignore the return value given with {done:true}
+
+``` js
+function* genFuncWithReturn() {
+    yield 'a'; // { value: 'a', done: false }
+    yield 'b'; // { value: 'b', done: false }
+    return result; // { value: 'result', done: true }
+}
+
+for (let x of genFuncWithReturn()) {
+    console.log(x);
+}
+// Output:
+// a
+// b
+
+let arr = [...genFuncWithReturn()]; // ['a', 'b']
+```
+
+### Generators help with simplified iterable implementation via yield
+
+Normally to implement iterable behavior, one would need to implement `[Symbol.iterator]()` method,
+but since generator objects are iterable, returning values from generator via yield acts like an iterable implementation.
+
+e.g.
+``` js
+function* objectEntries(obj) {
+    // In ES6, you can use strings or symbols as property keys,
+    // Reflect.ownKeys() retrieves both
+    let propKeys = Reflect.ownKeys(obj);
+
+    for (let propKey of propKeys) {
+        yield [propKey, obj[propKey]];
+    }
+}
+
+let jane = { first: 'Jane', last: 'Doe' };
+for (let [key,value] of objectEntries(jane)) {
+    console.log(`${key}: ${value}`);
+}
+// Output:
+// first: Jane
+// last: Doe
+```
 
 ### Async/Await and their roles with promises.
 
