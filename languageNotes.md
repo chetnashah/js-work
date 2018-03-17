@@ -184,6 +184,7 @@ class Plane {
 }
 ```
 
+
 ##### Extending Classes
 
 Classes support extending classes, but can also extend other objects. Whatever you extend must be a constructor.
@@ -195,6 +196,24 @@ Classes support extending classes, but can also extend other objects. Whatever y
 * For more fine grained details on super references (refer http://2ality.com/2011/11/super-references.html)
 
 * `derivedInstance instanceOf BaseClass` returns true.
+
+
+#### Equality Semantics in JavaScript
+
+1. Abstract equality operator(==) : performs co-ercion on input values and compares them.
+2. Strict Equality Operator(===) : checks types as well as values. Returns true only if types are same and values are same.
+3. SameValue Algorithm: Similar to (===) but with different handling of NaN, and +/- 0.
+4. SameValueZero Algorithm Similar to SameValue/(===) with different handling of +/- 0.
+5. Object.is use SameValue for equality checking
+6. Map, Set, includes use SameValueZero for equality checking.
+
+##### Object equality comparision
+
+Two different object literals with similar contents will fail strict equality comparision, since variable comparision leads to reference/address comparision.
+
+To check structural/value equality of objects, we have to individually look at own-keys, compare primitive values, and if an object is found as key, check recursively.
+
+
 
 #### ES6 builtins
 
@@ -239,8 +258,9 @@ Set has appropriately named `.add(value)` and `.delete(value)` and `.has(value)`
 
 **Note** : `set.add(value)` and `set.delete(value)` do not throw error, if a 
 duplicate element is added or we are trying to delete a value that is not present.
+When adding value, set membership is done by equality comparision via using `Object.is()` method.
 
-Check membership in set with `set.has(value)`
+Check membership in set with `set.has(value)`.
 
 Get the set iterator with `set.values()` or `set.keys()`. Both methods are exactly same for a set.
 

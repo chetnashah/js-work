@@ -1,12 +1,15 @@
 
 
-
+// use this from node only if you need to programmatically transform
+// code via babel-core package
 var fs = require('fs');
 var babel = require('babel-core');
-var firstplugin = require('./firstplugin.js');
 
+var plugin = '';
+// read the pluginname from cmd args
+plugin = require('./'+process.argv[2]);
 // read the filename from the command line arguments
-var fileName = process.argv[2];
+var fileName = process.argv[3];
 
 // read the code from this file
 fs.readFile(fileName, function(err, data) {
@@ -17,7 +20,7 @@ fs.readFile(fileName, function(err, data) {
 
     // use our plugin to transform the source
     var out = babel.transform(src, {
-        plugins: [firstplugin]
+        plugins: [plugin]
     });
 
     // print the generated code to screen

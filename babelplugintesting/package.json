@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "babel-core": "^6.23.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
   }
 }

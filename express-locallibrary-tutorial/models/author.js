@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var authorSchema = new Schema({
-    first_name: { type: string, required: true, max: 100 },
-    family_name: { type: string, required: true, max: 100 },
+    first_name: { type: String, required: true, max: 100 },
+    family_name: { type: String, required: true, max: 100 },
     date_of_birth: { type: Date },
     date_of_death: { type: Date }
 })
@@ -15,8 +15,12 @@ authorSchema.virtual('name').get(
     }
 );
 
+authorSchema.virtual('lifespan').get(function(){
+    return this.date_of_death - this.date_of_birth;
+});
+
 // virtual for author's url
-author.virtual('url').get(
+authorSchema.virtual('url').get(
     function() {
         return '/catalog/author/' + this._id;
     }
