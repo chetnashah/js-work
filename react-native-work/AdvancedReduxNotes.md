@@ -28,14 +28,51 @@ A reducer signature always looks like
 (previousState, action) => newState
 ```
 
+#### Role of combineReducers:
+
+Take in multiple reducers with corresponding keys, and return a reducer, which when used, call each input reducer whose results are stored in the respective keys. e.g
+``` js
+const rootReducer = combineReducers({potato: potatoReducer, tomato: tomatoReducer});
+// This would produce the following state object
+{
+  potato: {
+    // ... potatoes, and other state managed by the potatoReducer ... 
+  },
+  tomato: {
+    // ... tomatoes, and other state managed by the tomatoReducer, maybe some nice sauce? ...
+  }
+}
+```
+
 #### Selectors:
 
 a function that knows how to extract a specific piece of data from the store. Like a lens.
 Usually colocated with reducers.
 
+#### "connect"-ing redux state to React UI
+
+Technically, a container component is just a React component that uses `store.subscribe()` to read a part of the Redux state tree and supply props to a presentational component it renders. You could write a container component by hand, but we suggest instead generating container components with the React Redux library's connect() function, which provides many useful optimizations to prevent unnecessary re-renders.
+
+To use `connect()`, you need to define a special function called `mapStateToProps` that tells how to transform the current Redux store state into the props you want to pass to a presentational component you are wrapping.
+You would also pass in second argument `mapDispatchToProps` inside connect if it is defined.
+
+#### Role of "bindActionCreators" and dispatching actions from react ui to redux
+
+`mapdispatchtoprops` is a function that takes in argument dispatch and should return props. the returned props have as keys, the function that dispatch actions to redux. The main idea is make action creators available to component as props e.g. `this.props.selectBook()` would automatically send an action through the redux.
+
+```
+bindActionCreaters:: 
+ObjectWithActionCreators, dispatch -> PropsForComponentOfSameShape
+
+mapDispatchToProps::
+dispatch -> ObjectWithActionCreators
+```
+
+When we are using bindActionCreators and mapDispatchToProps, there is no need of manually calling dispatch.
+
 ### Data flow/lifecycle for redux in app
 
-1. You call store.dispatch(action)
+1. You call store.dispatch(action) **Note** - Every action is passed to all the reducers.
 2. Redux store calls reducer function it was given.
 3. Root reducer combines output of multiple reducers into single state tree
 4. Redux store saves complete state tree given by rootReducer and can be retrived via store.getState()
@@ -56,6 +93,10 @@ nextState[action.subreddit] = posts(state[action.subreddit], action)
 return Object.assign({}, state, nextState)
 ```
 
+### Actions
+
+Actions are payloads of information that send data from your application to your store. They are the only source of information for the store.
+**All reducers are called when an action is dispatched**
 
 ### Asynchronous actions
 
@@ -168,13 +209,26 @@ This function doesn't need to be pure; it is thus allowed to have side effects, 
 
 ### What are redux middlewares?
 
-It provides a third party extension point
-between dispatching an action, and the moment it reaches
-a reducer. People use redux middleware for logging,
+It provides a control over an action between dispatching an action, and the moment it reaches
+a reducer. Think of them as action interceptors and modifiers. 
+People use redux middleware for logging,
 crash reporting, talking to an asynchronous API, routing
 and more.
 
-redux notes:
+Without middleware, Redux store only supports synchronous data flow.
+
+
+### redux-promise middleware library
+
+Helps us handle async stuff like ajax requests in our application.
+Requirements: incoming promise should be FSA compliant, and the payload should be promise.
+If it receives an Flux Standard Action whose payload is a promise, it does not immediately move it forward, 
+but it will either
+dispatch a copy of the action with the resolved value of the promise, and set status to success.
+dispatch a copy of the action with the rejected value of the promise, and set status to error.
+
+As a result the reducers of the associated type directly see the data instead of a promise.
+
 
 ### A standard action (also known as FSA - flux standard action)
 A standard action
@@ -191,6 +245,23 @@ e.g.
   }
 }
 ```
+
+### writing your own redux middlware
+
+Remember the job of a middleware is to modify, route, block, transform or pass-thru actions.
+A typical middleware looks like following:
+```js
+export default function({ dispatch }) {
+    return next => action => {
+        console.log('action = ', action);
+        // do middleware specific stuff
+        // if you want to go to next middleware call next with action
+        next(action);
+    }
+}
+```
+
+**Note** - `dispatch` vs `next`, `next` just forwards action to the next middleware, where as using `dispatch` with an action starts from the very first middleware.
 
 ### redux-actions library
 

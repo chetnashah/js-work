@@ -1,3 +1,29 @@
+
+#### the "constructor" property
+
+The constructor property sits on the prototype,
+and holds a reference to the function that created a given instance e.g.
+
+``` js
+function Dog(name) {
+  this.name = name;
+}
+
+let d = new Dog('chet');
+console.log(d.constructor);// function Dog {}
+
+// so you can make new instances even if you
+// don't know what class creates such instances
+// e.g.
+
+let d2 = new d.constructor('goofy');// d2 is a dog.
+
+// for plain literal objects,
+// constructor is object
+console.log({}.constructor);// Object
+console.log([].constructor);// Array
+```
+
 #### ES6
 
 * Posts from mozilla (https://hacks.mozilla.org/category/es6-in-depth/)
@@ -108,6 +134,81 @@ function parameters, essentially in places where bindings are introduced.
 
 * **Note**: If desctructured part (variable name) cannot find corresponding value in expression value, the variable names are bound to undefined. To get around this in function declarations You can use default parameter values.
 
+#### Symbols in ES6
+
+Symbols are new primitive type in Javascript. They are created via a factory function known as Symbol **Note: No new keyword, otherwise u get error**'
+They return a new unique id(which we cannot see), optionally that take a description, but that is not same as the id value they return.
+``` js
+const mySymbol = Symbol('hello');
+```
+
+Everytime you call the factory function, a new and unique symbol is created, and every symbol has its own identity
+e.g.
+``` js
+Symbol() === Symbol() // false
+Symbol('hi') === Symbol('hi') //false
+```
+
+##### Symbols as property keys
+
+Symbols can be used as property keys
+``` js
+const MY_KEY = Symbol();
+const MK2 = Symbol();
+const obj = {};
+obj[MY_KEY] = 123;
+
+const obj2 = {
+  "abc": 22,
+  [MY_KEY]: 'hi',
+  [MK2]() {
+    console.log('Someone called a method');
+  } 
+};
+console.log(obj[MY_KEY]);
+console.log(obj2[MY_KEY]);
+console.log(obj2[MK2]());
+```
+
+##### Operations related to property keys and symbols
+
+Following operations are aware of symbols as property keys:
+
+* Reflect.ownKeys()
+* Property access via []
+* Object.assign()
+
+Whereas following operations ignore symbols as property keys:
+
+* Object.keys()
+* Object.getOwnPropertyNames()
+* for-in loop
+
+##### Sharing of symbols
+
+At times one would want different parts of code to share symbols. In that case we use `Symbol.for` method that accepts a single parameter, which is a string identifier for symbol you want to create (don't confuse this with description of a symbol), as this key acts as a key in global symbol registry.
+
+``` js
+let uid1 = Symbol.for('uid');
+
+let obj = {
+  [uid1]: 12345
+};
+console.log(obj[uid1]); // 12345
+
+let uid2 = Symbol.for('uid');
+console.log(uid1 === uid2); // true
+console.log(obj[uid2]); // 12345
+```
+
+The `Symbol.for` method first searches global symbol registry to see whether a symbol with key "uid" exists. If so, the method returns existing symbol. If no such symbol exists, a new symbol is created and registered to global symbol registry using specified key.
+
+
+##### Co-ercion of Symbols
+
+TODO
+
+
 #### Arrow functions
 
 * Arrow functions are always expressions, In fact their real name is arrow function
@@ -124,6 +225,19 @@ console.log(add(9))           // function that takes two arguments and adds 9 to
 console.log(add(9)(10))       // function that takes one argument and adds 19 to it
 console.log(add(9)(10)(11))   // 19 + 11 = 30
 ```
+
+* Arrow functions always using enclosing context as "this", also if you call arrow function using `fn.call(thisArg, args)` or `fn.apply(thisArg, args)`, then thisArg is simply ignored.
+
+* Arrow function do not have their own arguments object.
+
+* Arrow functions will throw an error if called with new.
+
+* Arrow function do not have a prototype property
+``` js
+var foo = function () { };
+console.log(foo.prototype); //undefined
+```
+
 
 #### DEfault function parameter list
 * Default function parameters are placed along with parameters in the parameter list following parameter name with a '=' in between.
@@ -212,8 +326,6 @@ Classes support extending classes, but can also extend other objects. Whatever y
 Two different object literals with similar contents will fail strict equality comparision, since variable comparision leads to reference/address comparision.
 
 To check structural/value equality of objects, we have to individually look at own-keys, compare primitive values, and if an object is found as key, check recursively.
-
-
 
 #### ES6 builtins
 
