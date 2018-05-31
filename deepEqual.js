@@ -1,4 +1,5 @@
 // a deep comparision method for checking value equality
+// we are not comparing functions though, objects arrays etc.
 function isEqual(a, b) {
     if (a === b) {
         return true;

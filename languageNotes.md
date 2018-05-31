@@ -298,6 +298,38 @@ class Plane {
 }
 ```
 
+##### Checks done on JS classes.
+
+* Cannot call them like a function (i.e without new), will throw exception.
+```js
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+let p = Person(); // TypeError exception - cannot call constructor without new
+```
+
+* cannot use new for a classes' prototype method.
+
+```js
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayHello() {
+    console.log('Hello ' + this.name);
+  }
+}
+
+let p2 = new Person();
+let p3 = new p2.sayHello();// cannot call a class method using new
+// p2.sayHello is not a constructor
+```
+
+Assuming a `class Foo`, the `Foo.prototype` is not a writable property of Foo, but `Foo.prototype.*` is writable for dynamic patching.
 
 ##### Extending Classes
 
