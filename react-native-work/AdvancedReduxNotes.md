@@ -229,6 +229,28 @@ dispatch a copy of the action with the rejected value of the promise, and set st
 
 As a result the reducers of the associated type directly see the data instead of a promise.
 
+### redux-thunk
+
+The purpose of redux-thunk is to give you complete control via dispatch method.
+Dispatching an action flows through middlewares as well as reducers.
+
+When using redux-thunk,
+we return functions from action creators instead of returning actions.
+Here is an example:
+```js
+// the action-creator
+export function fetchUsers() {
+  const req = axios.get('http://jsonplaceholder.typicode.com/users');
+
+  // returning function for redux-thunk
+  return (dispatch) => {
+    req.then({ data } => {
+      dispatch({ type: FETCH_PROFILE, payload: data});
+    })
+  }
+}
+```
+
 
 ### A standard action (also known as FSA - flux standard action)
 A standard action

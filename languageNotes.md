@@ -1,7 +1,7 @@
 
 #### the "constructor" property
 
-The constructor property sits on the prototype,
+The constructor property sits on the .prototype,
 and holds a reference to the function that created a given instance e.g.
 
 ``` js
@@ -271,6 +271,21 @@ function createSundae({scoops = 1, toppings = ['Hot Fudge']} = {}) {
 }
 ```
 
+#### new.target property
+
+new.target is an implicit parameter that all functions have.
+The new.target property lets you detect whether a function or constructor was called using the new operator. In constructors and functions instantiated with the new operator, new.target returns a reference to the constructor or function. In normal function calls, new.target is undefined.
+When invoking Reflect.construct(), the new.target operator will point to the newTarget parameter if supplied, or target if not.
+
+#### Reflect.construct
+
+```js
+Reflect.construct(target, argumentsList[, newTarget])
+```
+Reflect.construct allows you to invoke a constructor with a variable number of arguments, along with specifying which prototype to use.
+When invoking Reflect.construct(), on the other hand, the new.target operator will point to the newTarget parameter if supplied, or target if not.
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/construct
+
 #### ES6 classes
 
 ES6 classes are same as pseudoclassical class pattern.
@@ -343,6 +358,107 @@ Classes support extending classes, but can also extend other objects. Whatever y
 
 * `derivedInstance instanceOf BaseClass` returns true.
 
+The instance object is created in different locations in ES6 and ES5:
+
+In ES6, it is created in the base constructor, the last in a chain of constructor calls. The superconstructor is invoked via super(), which triggers a constructor call.
+In ES5, it is created in the operand of new, the first in a chain of constructor calls. The superconstructor is invoked via a function call.
+
+Subclassing in ES5:
+```js
+function Person(name) {
+    this.name = name;
+}
+
+function Employee(name, title) {
+    Person.call(this, name);
+    this.title = title;
+}
+Employee.prototype = Object.create(Person.prototype);
+Employee.prototype.constructor = Employee;
+```
+
+Subclassing in ES6:
+```js
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+class Employee extends Person {
+  constructor(name, title) {
+    super(name);
+    this.title = title;
+  }
+}
+```
+
+![ES6 subclassing](img/es6inheritance.png)
+
+Babel transpiled ES6 subclassing:
+```js
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError(
+      "this hasn't been initialised - super() hasn't been called"
+    );
+  }
+  return call && (typeof call === "object" || typeof call === "function")
+    ? call
+    : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError(
+      "Super expression must either be null or a function, not " +
+        typeof superClass
+    );
+  }
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass)
+    Object.setPrototypeOf
+      ? Object.setPrototypeOf(subClass, superClass)
+      : (subClass.__proto__ = superClass);
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+var Person = function Person(name) {
+  _classCallCheck(this, Person);
+
+  this.name = name;
+};
+
+var Employee = (function(_Person) {
+  _inherits(Employee, _Person);
+
+  function Employee(name, title) {
+    _classCallCheck(this, Employee);
+
+    var _this = _possibleConstructorReturn(
+      this,
+      (Employee.__proto__ || Object.getPrototypeOf(Employee)).call(this, name)
+    );
+
+    _this.title = title;
+    return _this;
+  }
+
+  return Employee;
+})(Person);
+```
 
 #### Equality Semantics in JavaScript
 
