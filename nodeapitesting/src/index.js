@@ -1,13 +1,19 @@
+var express = require('express');
 
-const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-let k= 0;
-for (k=0; k < 10000; k++) {
-  arr.push(k);
+var app = express();
+
+// pure js eventloop starvation
+// via this spinning
+function doCPUWork(durationMs) {
+  const start = Date.now();
+  while (Date.now() - start < durationMs) {
+
+  }
 }
-const used = process.memoryUsage();
 
-console.log('used = ', used);
+app.get('/', (req, res) => {
+  doCPUWork(4000);
+  res.send('Hi there');
+});
 
-console.log('heap used percentage = ', ((used.heapUsed * 100) / used.heapTotal));
-
-setTimeout(()=>{console.log("done : ", arr[1])}, 6000);
+app.listen(process.env.wport);

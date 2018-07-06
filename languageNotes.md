@@ -216,7 +216,7 @@ expressions.
 
 * With regular functions, the value of this is set based on how the function is called. With arrow functions, the value of this is based on the functions surrounding context. In other words, the value of this inside an arrow function is same as the value of this outside the arrow function.
 
-* Remember: A function passed to setTimeout is called without new, without call, without apply, and without a context object, so this will usually be global object (if you are using regular functions). Solution is to use arrow functions.
+* Remember: A function passed to setTimeout is called without new, without call, without apply, and without a context object(no well defined this), so this will usually be global object (if you are using regular functions). Solution is to use arrow functions.
 
 * Currying becomes easy: Currying is now easy with arrow functions like so.
 ``` js
