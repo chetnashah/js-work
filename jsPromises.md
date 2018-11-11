@@ -202,6 +202,11 @@ for (let x of genFuncWithReturn()) {
 let arr = [...genFuncWithReturn()]; // ['a', 'b']
 ```
 
+Job of `return` statement in generator function:
+
+return deliveres a return value for an iterators last iteration (when done equals true).
+Other wise it is usually `{ value: undefined, done: true}`.
+
 ### Generators help with simplified iterable implementation via yield
 
 Normally to implement iterable behavior, one would need to implement `[Symbol.iterator]()` method,
@@ -231,6 +236,8 @@ for (let [key,value] of objectEntries(jane)) {
 ### yield limitations
 
 You can only use `yield` keyword inside generator functions, not inside regular functions or arrow functions, it will be a SyntaxError.
+
+A significant limitation of generators is that you can only yield while you are (statically) inside a generator function. That is, yielding in callbacks doesn’t work.
 
 ### yield* keyword
 
@@ -269,7 +276,7 @@ function* genfwithreturn() {
     return 'theres'; 
 }
 function* logreturned(genobj) {
-    let result = yield* genobj;
+    let result = yield* genobj;// yield* accepts iterables, remember?
 }
 for(let v of logreturned(genfwithreturn())) { 
     console.log(v); // 'a', 'b', 'theres'
@@ -280,8 +287,10 @@ for(let v of logreturned(genfwithreturn())) {
 
 When using a generator as an observer, 
 it is important to note that 
-the only purpose of the first invocation of next() 
-is to start the observer
+the only purpose of the first invocation of `next()`
+is to start the observer.
+
+If you try to send information via first `next`, it will throw error.
 
 ### The actual generator interface.
 
@@ -307,6 +316,30 @@ interface IteratorResult {
     value : any;
     done : boolean;
 }
+```
+
+### Terminating generators midway by calling return(val) on generator object
+
+While `next()` sends normal input,
+`return(val)` terminates the generator,
+and `throw()` signals an error.
+
+```js
+function* testgenerator(){
+    console.log('start');
+    yield 1;
+    yield 50;
+    yield 99;
+    console.log('end');
+}
+
+const tgo = testgenerator();
+tgo.next(); // start
+// { value: 1, done: false }
+tgo.return(22); // generator terminated midway.
+// { value: 22, done: true }
+tgo.next();
+// { value: undefined, done true }
 ```
 
 ### Async/Await and their roles with promises.
