@@ -1,4 +1,8 @@
 
+### Promise Anti patterns
+
+http://taoofcode.net/promise-anti-patterns/
+
 ### Promise States
 A promises has three mutually exclusive states:
 1. fullfilled/resolved, if `promise.then(f)` will call f as soon as possible.
