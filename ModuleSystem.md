@@ -32,6 +32,23 @@ var Module = (function () {
 CommonJS is a specification, not a library or an implementation.
 Nodejs module-system implements this commonjs specification.
 
+```js
+//    filename: foo.js
+var $ = require('jquery');
+var _ = require('underscore');
+
+//    methods
+function a(){};    //    private because it's omitted from module.exports (see below)
+function b(){};    //    public because it's defined in module.exports
+function c(){};    //    public because it's defined in module.exports
+
+//    exposed public methods
+module.exports = {
+    b: b,
+    c: c
+};
+```
+
 #### Specification aspects
 Usually each file represents a module.
 Each module has an string id (usually file name).
@@ -55,9 +72,61 @@ This is also one of the reasons why modules are considered as singletons.
 Like CommonJS, AMD is a specification.
 RequireJS is an implementation of AMD specification.
 
+```js
+//    filename: foo.js
+define(['jquery', 'underscore'], function ($, _) {
+    //    methods
+    function a(){};    //    private because it's not returned (see below)
+    function b(){};    //    public because it's returned
+    function c(){};    //    public because it's returned
+
+    //    exposed public methods
+    return {
+        b: b,
+        c: c
+    }
+});
+```
+
 ### Styles of writing modules
 
 1. IIFEs
 2. CommonJS style: require and exports/module.exports
 3. AMD style
 4. ES6 style: import and exports (named and default)
+
+### UMD: A technique for modules that work everywhere
+
+UMD modules check for the existence of a module loader environment.
+
+Provides ability to use modules in browser/node environments
+and adjusts the code according to the env in which it is running.
+`jQuery`, `moment`, `lodash` are written in UMD due to their ubiquity.
+
+Check runtime variables like `define`, `exports` etc.
+to see which one can be used.
+```
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD
+        define(['jquery', 'underscore'], factory);
+    } else if (typeof exports === 'object') {
+        // Node, CommonJS-like
+        module.exports = factory(require('jquery'), require('underscore'));
+    } else {
+        // Browser globals (root is window)
+        root.returnExports = factory(root.jQuery, root._);
+    }
+}(this, function ($, _) {
+    //    methods
+    function a(){};    //    private because it's not returned (see below)
+    function b(){};    //    public because it's returned
+    function c(){};    //    public because it's returned
+
+    //    exposed public methods
+    return {
+        b: b,
+        c: c
+    }
+}));
+```
