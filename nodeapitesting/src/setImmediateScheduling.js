@@ -1,12 +1,18 @@
-// scheduling of setImmediate is fair,
-// does not starve the loop
 
-var fs = require('fs');
-// schedules itself via setImmediate
-var cb = function(){
-    setImmediate(cb);
+console.log('before');
+
+function f(arg0) {
+  console.log('f executing!, arg0 = ', arg0);
 }
-fs.write(process.stdout.fd,'hello',function(){
-    fs.writeSync(process.stdout.fd, 'done');
-})
-cb();
+
+setTimeout(f, 0, 'scheduled-by-settimeout');
+
+// setImmediate: (f, argsArr) => ImmediateId
+setImmediate(f, 'scheduled-by-setImmediate');
+
+// nextTick: (f, argsArr) => void
+process.nextTick(f, 'scheduled-by-process.nextTick');
+
+console.log('after');
+
+
