@@ -10,7 +10,7 @@ typeof NaN // "number"
 
 
 
-### `isNaN()` vs `Number.isNaN`
+### `isNaN()` vs `Number.isNaN()`
 
 `isNaN` tries to convert passed-in value to number and returns true/false based on whether it was successfull by using `ToNumber`.
 
@@ -29,7 +29,7 @@ isNaN(undefined);// true
 **ToNumber** - See table below
 
 | Argument type | Result |
-|:---:|:-----:|
+|---|-----|
 | Number | Return without conversion |
 | Undefined | return NaN |
 | null | return +0 |
@@ -46,4 +46,21 @@ isNaN(undefined);// true
 Number.isNaN(NaN); // true
 
 // Number.isNaN is false for all other 
+```
+
+In fact below definitions are equivalent:
+
+```js
+
+function n1(a1) {
+    if(typeof a1 === 'number' && isNaN(a1)) {
+        return true;
+    }
+    return false;
+}
+
+// same semantics as above
+function n2(a2) {
+    return Number.isNaN(a2);
+}
 ```
