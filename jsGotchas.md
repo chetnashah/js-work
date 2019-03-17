@@ -64,3 +64,8 @@ function n2(a2) {
     return Number.isNaN(a2);
 }
 ```
+
+### `in` operator vs `hasOwnProperty`
+
+in will also return true if key gets found somewhere in the prototype chain, whereas Object.hasOwnProperty (like the name already tells us), will only return true if key is available on that object directly (its "owns" the property).
+
