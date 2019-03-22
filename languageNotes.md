@@ -277,6 +277,18 @@ new.target is an implicit parameter that all functions have.
 The new.target property lets you detect whether a function or constructor was called using the new operator. In constructors and functions instantiated with the new operator, new.target returns a reference to the constructor or function. In normal function calls, new.target is undefined.
 When invoking Reflect.construct(), the new.target operator will point to the newTarget parameter if supplied, or target if not.
 
+### quick and dirty way to check if function is used as constructor
+
+```js
+function Checkers(){
+  if(this instanceof Checkers) {
+    console.log('was called with new, i.e as a constructor');
+  } else {
+    console.log('was called as a regular fn');
+  }
+}
+```
+
 #### Reflect.construct
 
 ```js
