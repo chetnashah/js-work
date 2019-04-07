@@ -43,7 +43,7 @@ if (OS.platform() === 'win32') {
   console.log(__dirname);
   setTimeout(() => {
       childProc.kill();
-  }, 5000);
+  }, 25000);
 }
 
 

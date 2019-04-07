@@ -38,8 +38,9 @@ process.on('SIGINT', (signal) => {
   console.log('received SIGINT: ', signal);
 });
 
-process.on('SIGTERM', (signal) => {
-  console.log('received SIGTERM: ', signal);
-});
+//process.on('SIGTERM', (signal) => {
+//  console.log('received SIGTERM: ', signal);
+//  process.exitCode = 1;
+//});
 
 
