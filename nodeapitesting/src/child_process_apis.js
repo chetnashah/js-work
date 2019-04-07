@@ -33,7 +33,17 @@ if (OS.platform() === 'win32') {
   console.log(`stdout: ${stdout}`);
   console.log(`stderr: ${stderr}`);
 });
-
+ 
+   const { fork } = require('child_process');
+  const childProc = fork(`${__dirname}/sub.js`);
+  childProc.on('message', (m) => {
+      console.log('parent got message: ', m);
+  });
+  childProc.send({ hello: 'world' });
+  console.log(__dirname);
+  setTimeout(() => {
+      childProc.kill();
+  }, 5000);
 }
 
 
