@@ -149,6 +149,24 @@ Symbol() === Symbol() // false
 Symbol('hi') === Symbol('hi') //false
 ```
 
+If you don’t have the reference for the Symbol, you just can’t use it. This also means two symbols will never equal the same value, even if they have the same description.
+
+The primary use case for symbols is library/wrapper functions to have private members.
+
+### Symbol registry and re-use using `Symbol.for`
+
+There is also another way to make `Symbol`s that can be easily fetched and re-used: `Symbol.for()`. 
+This method creates a Symbol in a `global Symbol registry`. 
+
+Small aside: this registry is also `cross-realm`, meaning a `Symbol` from an iframe or service worker will be the same as one generated from your existing frame.
+
+```js
+var localFooSymbol = Symbol('foo');
+var globalFooSymbol = Symbol.for('foo');
+globalFooSymbol = Symbol.for('foo');
+Symbol.for('dus') === Symbol.for('dus'); // true
+```
+
 ##### Symbols as property keys
 
 Symbols can be used as property keys
@@ -603,3 +621,75 @@ Like Sets, these methods do not throw errors on unexpected conditions.
 3. A Map is an iterable and can thus be directly iterated, whereas iterating over an Object requires obtaining its keys in some fashion and iterating over them.
 4. An Object has a prototype, so there are default keys in the map that could collide with your keys if you're not careful. As of ES5 this can be bypassed by using map = Object.create(null), but this is seldom done.
 5. A Map may perform better in scenarios involving frequent addition and removal of key pairs.
+
+### Javascript Property descriptors
+
+Each property on an object comes with
+a `property descriptor` internally. 
+It can be one of `access property descriptor(get,set based)` or `data property descriptor (value based)`.
+
+One can get a descriptor of a given property of a given object using
+`Object.getOwnPropertyDescriptor(obj, key)`.
+1. `value`: value of property (only for data properties)
+
+2. `writable`: whether value can be changed (only for data properties)
+
+3. `get`: a function that serves as getter for the property (only for accessor properties)
+
+4. `set`: a function that serves as setter for property (only for accessor properties)
+
+5. `configurable`:a boolean specifying if property can be deleted from the object or type of this property descriptor can be changed(accessor to data or vice versa)
+
+6. `enumerable`: true only if property shows up in object properties enumeration.
+
+```js
+
+o = { get foo() { return 17; } };
+d = Object.getOwnPropertyDescriptor(o, 'foo');
+// d is {
+//   configurable: true,
+//   enumerable: true,
+//   get: /*the getter function*/,
+//   set: undefined
+// }
+
+o = { bar: 42 };
+d = Object.getOwnPropertyDescriptor(o, 'bar');
+// d is {
+//   configurable: true,
+//   enumerable: true,
+//   value: 42,
+//   writable: true
+// }
+
+
+```
+
+
+### Decorators
+
+Decorator is a plain function that will modify the property descriptor of the property being decorated. and thus will give additional behavior to the property being decorated.
+
+A decorator function takes `target, key, descriptor` and returns modified descriptor.
+
+Example definition of a `readonly` descriptor:
+```js
+class Cat{
+  @readonly
+  meow(){ return 'cat says meow';}
+}
+
+function readonly(target, key descriptor) {
+  descriptor.writable = false;
+  return descriptor;
+}
+```
+
+#### Decorating a class
+
+`target` is modified in case of decorating a class
+```js
+function superhero(target){
+  target.isSuperhero = true;
+}
+```
