@@ -1,4 +1,40 @@
 
+### Summary
+
+Even in order to use with existing apps, use below: (`ReactRootView` + `InstanceManager` + `rootView.startApplication` + `setContentView(rootView)`)
+
+```java
+public class MyReactActivity extends Activity implements DefaultHardwareBackBtnHandler {
+    private ReactRootView mReactRootView;
+    private ReactInstanceManager mReactInstanceManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mReactRootView = new ReactRootView(this);
+        mReactInstanceManager = ReactInstanceManager.builder()
+                .setApplication(getApplication())
+                .setCurrentActivity(this)
+                .setBundleAssetName("index.android.bundle")
+                .setJSMainModulePath("index")
+                .addPackage(new MainReactPackage())
+                .setUseDeveloperSupport(BuildConfig.DEBUG)
+                .setInitialLifecycleState(LifecycleState.RESUMED)
+                .build();
+        // The string here (e.g. "MyReactNativeApp") has to match
+        // the string in AppRegistry.registerComponent() in index.js
+        mReactRootView.startReactApplication(mReactInstanceManager, "MyReactNativeApp", null);
+        setContentView(mReactRootView);
+    }
+
+    @Override
+    public void invokeDefaultOnBackPressed() {
+        super.onBackPressed();
+    }
+}
+```
+
 ### ReactApplication
 
 An interface with method `getReactNativeHost`.
@@ -17,9 +53,16 @@ Holds a private reference to `private @Nullable ReactInstanceManager mReactInsta
 Default root view for catalyst apps.
 Has following important public api:
 ```java
+  /**
+   * Schedule rendering of the react component rendered by the JS application from the given JS
+   * module (@{param moduleName}) using provided {@param reactInstanceManager} to attach to the JS
+   * context of that manager. Extra parameter {@param launchOptions} can be used to pass initial
+   * properties for the react component.
+   */
 public startReactApplication(ReactInstanceManager reactInstanceManager, String moduleName){
     // blah blah
     mReactInstanceManager = reactInstanceManager;
+    mJSModuleName = moduleName;
     mReactInstanceManager.createReactContextInBackground();
     attachToReactInstanceManager(); // see next
 }
@@ -38,7 +81,7 @@ Calls into JS to start the React application. Can be called multiple times with 
 ```java
   public void runApplication() { 
       /// blah blah
-        catalystInstance.getJSModule(AppRegistry.class).runApplication(jsAppModuleName, appParams);
+        catalystInstance.getJSModule(AppRegistry.class).runApplication(mJSModuleName, appParams);
    }
 ```
 
