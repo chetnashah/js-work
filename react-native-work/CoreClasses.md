@@ -4,6 +4,7 @@
 Even in order to use with existing apps, use below: (`ReactRootView` + `InstanceManager` + `rootView.startApplication` + `setContentView(rootView)`)
 
 ```java
+// This needs to be done when not using ReactActivity
 public class MyReactActivity extends Activity implements DefaultHardwareBackBtnHandler {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
@@ -278,6 +279,9 @@ Attach given {@param reactRoot} to a catalyst instance manager and start JS appl
 Holds a reference of a `ReactActivityDelegate`, which is created during constructor,
 All common methods like `onCreate, onResume, ...` are forwarded to also call `mReactActivityDelegate`.
 
+To provide your own `ReactActivityDelegate`, override `createReactActivityDelegate`.
+
+
 
 ### ReactActivityDelegate
 
@@ -311,6 +315,7 @@ onCreate(){
 All commnon operations like `onCreate, onResume, onDestroy ...` are forwarded to `mReactDelegate`
 Has a method `protected createRootView` which returns an instance of `ReactRootView`.
 
+To provide your own `ReactRootView`, override `createRootView`.
 
 
 ### ReactDelegate
