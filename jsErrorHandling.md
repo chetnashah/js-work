@@ -2,9 +2,79 @@
 ### JS Error object.
 
 Main properties:
-1. name
-2. message
-3. stack
+1. name: string
+2. message: string
+3. stack: string
+
+### Capturing (current) stack trace without involving Error
+
+Available in chrome and V8
+
+A static method `Error.captureStackTrace` takes an `obj` and populates a `stack` property
+within obj with the current stack trace. e.g.
+```js
+const tt = {};
+Error.captureStackTrace(tt);
+console.log(tt);
+// { stack: "Error↵    at <anonymous>:1:7"}
+```
+
+Trimming inner stack frames while capturing:
+If the second argument is provided a `func`, the function passed will be considered the ending point of the call stack and therefore the stack trace will only display the calls that happened before this function was called.
+
+```js
+const myObj = {};
+
+function d() {
+    // Here we will store the current stack trace into myObj
+    // This time we will hide all the frames after `b` and `b` itself
+    Error.captureStackTrace(myObj, b);
+}
+
+function c() {
+    d();
+}
+
+function b() {
+    c();
+}
+
+function a() {
+    b();
+}
+
+// First we will call these functions
+a();
+
+// Now let's see what is the stack trace stored into myObj.stack
+console.log(myObj.stack);
+
+// This will print the following stack to the console:
+//    at a (repl:2:1) <-- As you can see here we only get frames before `b` was called
+//    at repl:1:1 <-- Node internals below this line
+```
+
+### What does a single stack frame like
+
+Mostly the structure is VM dependent, but there are usually common fields
+ like `lineNumber`, `fileName`, `functionName` etc. for a single stack frame 
+ e.g.
+ Here is one common abstraction in form of a library:
+ https://github.com/stacktracejs/stackframe
+ ```js
+ // Create StackFrame and set properties
+var stackFrame = new StackFrame({
+    functionName: 'funName',
+    args: ['args'],
+    fileName: 'http://localhost:3000/file.js',
+    lineNumber: 1,
+    columnNumber: 3288, 
+    isEval: true,
+    isNative: false,
+    source: 'ORIGINAL_STACK_LINE'
+});
+ ```
+
 
 ### Six built-in Error types
 
