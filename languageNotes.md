@@ -117,6 +117,75 @@ interface IteratorResult {
 }
 ```
 
+### Why bind `this` in constructor?
+
+If you call `someInstance.method` then `this` is correctly resolved as `someInstance`.
+But if you somehow get a reference to the instance method, and directly call is `this` is resolved to undefined.
+
+```js
+class Logger {
+  printName (name = 'there') {
+    this.print(`Hello ${name}`);
+  }
+
+  print (text) {
+    console.log(text); 
+  }
+}
+
+// case 1
+const l1 = new Logger();
+l1.printName(); // prints "Hello there" correctly, this is l1
+
+// case 2
+const logger = new Logger();
+const { printName } = logger;
+printName();
+// <- Uncaught TypeError: Cannot read property 'print' of undefined
+```
+
+IN order to solve the problem where someone obtains reference to method directly
+like case `2` one needs to put 
+`this.printName = this.printName.bind(this)` inside constructor
+
+### class properties of arrow functions
+
+There is a babel proposal for doing following:
+```js
+class A {
+  static color = "red";
+  counter = 0;
+  
+  handleClick = () => {
+    this.counter++;
+  }
+  
+  handleLongClick() {
+    this.counter++;
+  }
+}
+```
+
+Which essentially transpiles to following:
+```js
+class A {
+  constructor(){
+    // we see this is fixed to the construction-instance always.
+    // not present on prototype
+    this.handleClick = () => {
+      this.counter++;
+    }
+  }
+
+  // this can vary depending on callsite
+  // present on prototype
+  handleLongClick(){
+    this.counter++;
+  }
+}
+A.color = 'red';
+```
+
 ##### Spread operator
 
 * Spread operator works for expanding all iterables(Array, Set, Map, Generator objects)
