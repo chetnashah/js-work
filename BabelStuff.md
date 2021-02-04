@@ -43,3 +43,38 @@ babel.transformFile("filename.js", options, function(err, result) {
     result;/// -> { code, map, ast }
 })
 ```
+
+#### core api
+
+`transform` takes in code and options and returns `{ code, map, ast }`.
+```js
+babel.transform(code, options, function(err, result) => {
+    result; // { code, map, ast}
+});
+```
+
+you can pass in `ast: true` in options to get an ast.
+Babel's default is to generate string and sourcemap, but in some context it can 
+be useful to get the AST itself.
+
+```js
+const filename = 'example.js';
+const sourceString = fs.readFileSync(filename, 'utf-8');
+
+// source,config -> AST ( no transformation )
+const sourceAST  = parseSync(sourceString, config);
+// source -> AST after transformation
+const { ast } = babel.transformSync(sourceString, { filename, ast: true, code: false});
+// AST, source -> Transformed code
+const { code, map } = babel.transformFromAstSync(ast, sourceString, {
+    filename,
+    presets: ['minify'],
+    configFile: false,
+    babelrc: false
+});
+```
+
+#### babel core api options obj
+
+`overrides` can be provided to override/merge config with existing one.
+`overrides` field holds an array of configs that will override existing one.
