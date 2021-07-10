@@ -122,3 +122,8 @@ var _bar = require("bar");
 _foo.default
 _bar.bar
 ```
+
+### @babel/plugin-transform-modules-umd
+
+converts es modules to umd syntax
+
