@@ -78,3 +78,52 @@ const { code, map } = babel.transformFromAstSync(ast, sourceString, {
 
 `overrides` can be provided to override/merge config with existing one.
 `overrides` field holds an array of configs that will override existing one.
+
+
+### babel module transformation es modules -> commonjs
+
+Done via `@babel/plugin-transform-modules-commonjs`
+Only syntax is transformed. unaware of resolution.
+
+#### HOw export statements are transformed:
+```js
+export default 42
+```
+transforms into:
+```js
+// non enumerable property
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+// property named default on exports object
+exports.default = 42;
+```
+
+#### How import statements are transformed:
+
+```js
+import foo from 'foo';
+import { bar } from 'bar';
+foo;
+bar;
+```
+is transformed to
+```js
+"use strict";
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var _foo = _interopRequireDefault("foo");
+var _bar = require("bar");
+
+// all uses of the required module will have .default property
+_foo.default
+_bar.bar
+```
+
+### @babel/plugin-transform-modules-umd
+
+converts es modules to umd syntax
+
