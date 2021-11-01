@@ -5,10 +5,7 @@ RNGestureHanlderRootView.java -> `dispatchTouchEvent` override passes
 on to various RNGestureHandleOrchestrator and RNGestureHanlder via bounds checking etc.
 
 
-RN gesture handler guys got their properties:
-1. onGestureHandlerEvent
-2. onGestureHandlerStateChange: 
-events added to core ReactNativeViewConfig.js
+Note: If you are explicitly not using `GestureHandlerRootView`, then `react-navigation` is probably using it in its stack views.
 
 ### findNodeHandle : viewRef => viewTag
 
