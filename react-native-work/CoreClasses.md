@@ -389,3 +389,8 @@ public interface RootView {
 ### UIManager
 
 Has a method `addRootView`
+
+
+### Core renderer implementation
+
+Check in `react-native/LIbraries/Renderer/implementations/ReactNativeRenderer-prod.fb.js`
