@@ -8,3 +8,12 @@ events added to core ReactNativeViewConfig.js
 A public export of `react-native` package, takes a ref and 
 returns a view tag for that ref.
 
+
+### 
+
+1. first createHanlder, handler tags are auto incrementing, separate from view tags.
+
+2. attach handler to a view viewtag
+
+3. native calls forwarded to `RNGestureHandlerModule`.
+
