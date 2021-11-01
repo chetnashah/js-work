@@ -1,3 +1,10 @@
+
+### How touch propogation happens?
+
+RNGestureHanlderRootView.java -> `dispatchTouchEvent` override passes
+on to various RNGestureHandleOrchestrator and RNGestureHanlder via bounds checking etc.
+
+
 RN gesture handler guys got their properties:
 1. onGestureHandlerEvent
 2. onGestureHandlerStateChange: 
