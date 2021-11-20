@@ -148,6 +148,24 @@ IN order to solve the problem where someone obtains reference to method directly
 like case `2` one needs to put 
 `this.printName = this.printName.bind(this)` inside constructor
 
+### javascript `in` operator
+
+The `in` operator returns true for properties in current object and also the prototype chain. 
+(If you want to check for only non-inherited properties, use `Object.prototype.hasOwnProperty()` instead.)
+**Note**: LHS i.e. propname coerces into a string, RHS should be an object.
+
+```js
+const arr = [1,2,3]
+console.log(2 in arr);
+console.log(Symbol.iterator in arr); //  in prototype chain
+console.log('map' in arr)// true, in prototype chain, a property on Array.prototype
+console.log(Array.prototype.map in arr);// false, Array.prototype.map coerces to a string i.e. [object object]
+```
+
+
+`Symbol.iterator` symbol specifies the default iterator for an object. Used by `for...of`.
+
+
 ### class properties of arrow functions
 
 There is a babel proposal for doing following:
@@ -761,4 +779,83 @@ function readonly(target, key descriptor) {
 function superhero(target){
   target.isSuperhero = true;
 }
+```
+
+
+
+### JS destructuring
+
+Destructuring can happen in two ways:
+1. assignment expression
+2. function parameter definition
+
+#### JS renaming while destructuring
+
+```js
+const {j: k, i: u} = {j: 11};// j is renamed to k, i is renamed to u
+```
+
+### default values while destructuring
+
+```js
+const {a=1, b=2} = {a: 3};
+console.log(a);// 3
+console.log(b); // 2
+```
+
+### Combined default values and renaming while destructuring
+
+```js
+const {a:b = 1, c:d =2} = {};
+// b = 1
+// d = 2
+```
+
+#### Pattern matching algorithm
+
+We are trying to solve `pattern <- value`
+
+A `pattern` is either
+1. `variable x`
+2. Object pattern: `{ <<properties>>}`
+3. Array pattern: `[<<elements>>]`
+
+Case: Rules for variable
+```
+`x <- value`
+Ans: `x = value`
+```
+Case: Rules for object patterns
+1. 
+```
+{properties} <- undefined
+Ans: typeError: cannot destructure properties of undefined
+```
+2. 
+```
+{properties} <- null
+Ans typeError: cannot destructure properties of null
+```
+3.
+```
+{key: pattern, <<properties>>} <- obj
+Ans:
+pattern <- obj.key // recurse the pattern match
+{<<properties>>} <- obj // recurse on remaining
+```
+
+4.
+```
+{key: pattern = default_value, <<properties>>} <- obj
+
+```
+Ans:
+```js
+const tmp = obj.key;
+if(tmp!== undefined) {
+  pattern <- obj.key
+} else {
+  pattern <- default_value
+}
+{<<properties>>} <- obj
 ```
