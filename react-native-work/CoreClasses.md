@@ -394,3 +394,38 @@ Has a method `addRootView`
 ### Core renderer implementation
 
 Check in `react-native/LIbraries/Renderer/implementations/ReactNativeRenderer-prod.fb.js`
+
+
+### catalystinstanceImpl.cpp
+
+For `initializeBridge`: 
+
+Java CatalystImpl -> C++ CatalystImpl -> Bridge -> Bridge::callback --weak/global ref -> ReactCallback -> JavaCatalystInstanceImpl.
+
+### NativeToJSBridge.cpp
+
+Manages calls from native to JS, and also manages executors and threads.
+
+Manages a reference to executor in `std::uniqe_ptr<JSExecutor> m_executor`,
+to which it delegates/forwards everything,
+insitantiates m_executor via:
+```
+m_executr(jsExecutorFactor ->createJSExecutor(m_delegate, jsQueue))
+```
+
+### INstance.cpp
+
+Creates and has reference to instance of `NativeToJSBridge` and initializes
+it in `initializeBridge` method.
+
+Also forwards following calls to `NativeToJSBridge`:
+1. `callJSFunction`
+2. `registerBundle`
+3. `loadBundle`
+4. `loadBundleSync`
+5. `handleMemoryPressure`.
+6. `setGlobalVariable`
+7. `jniCallJSCallback` -> `callJSCallback`.
+
+common methods
+`instance_->loadScriptFromString`, which might call into `loadBundle` or `loadBundleSync` depending on `loadSynchronously` bool flag

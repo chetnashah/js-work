@@ -55,7 +55,19 @@ of the implementers e.g. (JSC/hermes etc).
 ### JSCRuntime
 
 `JSCRuntime` extends/implements `jsi::Runtime` interface.
+i.e.
+```
+class JSCRuntime : public jsi::Runtime
+```
 
+### HermesRuntime
+
+`HermesRuntime` extends/implements `jsi::Runtime`
+i.e.
+```
+// API/hermes/hermes.h in hermes repo
+class HermesRuntime: public jsi::Runtime
+```
 ### What does JSC core api look like (independent of react-native) ?
 
 It looks like :
