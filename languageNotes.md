@@ -859,3 +859,9 @@ if(tmp!== undefined) {
 }
 {<<properties>>} <- obj
 ```
+
+
+### Why is this not allowed before super in case of subclassing?
+
+access of `this` in a subclass before `super()` call is not allowed, 
+because in ES6 this is being born in the base class, therefore `super()` is needed to initialize it.
