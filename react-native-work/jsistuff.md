@@ -87,3 +87,16 @@ callable from JS using `Function::createFromHostFunction()`
 ```cpp
 using HostFunctionType = std::function<Value(Runtime& rt, const Value& thisVal, const Value* args, size_t count)>;
 ```
+
+
+### Conversion between jsi::Value and folly::dynamic
+
+```cpp
+facebook::jsi::Value valueFromDynamic(
+    facebook::jsi::Runtime& runtime,
+    const folly::dynamic& dyn);
+
+folly::dynamic dynamicFromValue(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value& value);
+```

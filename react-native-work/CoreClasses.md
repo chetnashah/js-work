@@ -404,7 +404,8 @@ Java CatalystImpl -> C++ CatalystImpl -> Bridge -> Bridge::callback --weak/globa
 
 ### NativeToJSBridge.cpp
 
-Manages calls from native to JS, and also manages executors and threads.
+* Manages calls from native to JS, and 
+* also manages executors and threads.
 
 Manages a reference to executor in `std::uniqe_ptr<JSExecutor> m_executor`,
 to which it delegates/forwards everything,
@@ -429,3 +430,130 @@ Also forwards following calls to `NativeToJSBridge`:
 
 common methods
 `instance_->loadScriptFromString`, which might call into `loadBundle` or `loadBundleSync` depending on `loadSynchronously` bool flag
+
+
+### JS -> Native modules call
+
+1. goes through `NativeModulesProx` JS -> cpp
+
+```cpp
+// This interface describes the delegate interface required by
+// Executor implementations to call from JS into native code.
+class ExecutorDelegate {
+ public:
+  virtual ~ExecutorDelegate() {}
+
+  virtual std::shared_ptr<ModuleRegistry> getModuleRegistry() = 0;
+
+  virtual void callNativeModules(
+      JSExecutor &executor,
+      folly::dynamic &&calls,
+      bool isEndOfBatch) = 0;
+  virtual MethodCallResult callSerializableNativeHook(
+      JSExecutor &executor,
+      unsigned int moduleId,
+      unsigned int methodId,
+      folly::dynamic &&args) = 0;
+};
+```
+
+An instance of `ExecutorDelegate` is `JSToNativeBridge`
+```cpp
+m_delegate(std::make_shared<JsToNativeBridge>(registry, callback)),
+```
+
+Both `NativeToJSBridge` and `JSToNativeBridge` live in a common file: `NativeToJsBridge.cpp/.h`
+```cpp
+class JsToNativeBridge : public react::ExecutorDelegate {
+class NativeToJsBridge {
+ public:
+  friend class JsToNativeBridge;
+//...
+}
+```
+
+On doing following on JS side:
+`NativeModules.MyReactNativeModule.callMe()`, i.e JS -> Cpp -> JS -> Cpp -> Java for `@ReactMethod` call in JS. for cpp -> java see ref(https://github.com/facebookincubator/fbjni/blob/main/docs/quickref.md#basic-method-usage-java-to-c-and-c-to-java)
+We get following Logs:
+
+
+```
+ I/ReactNativeJNI: NativeModuleProxy get: MyReactNativeModule
+ I/ReactNativeJNI: JSINativeModules.createModule:: name = MyReactNativeModule
+I/ReactNativeJS: 'NativeModules.js genModule: moduleName: ', 'MyReactNativeModule'
+ I/ReactNativeJS: 'MessageQueue.js enqueueNativeCall moduleID: ', 'MyReactNativeModule', ' methodID: ', 'callMe'
+ I/ReactNativeJS: global.nativeFlushQueueImmediate(queue) 
+ I/ReactNativeJNI: JSIExecutor.nativeFlushQueueImmediate()
+ I/ReactNativeJNI: JSIExecutor::callNativeModules
+I/ReactNativeJNI: JSToNative: callNativeModules::  call.moduleId: 27 call.methodId: 0 call.callId : 4
+ I/ReactNativeJNI:  ModuleRegistry.cpp callNativeMethod does invoke on moduleId: 27 methodId : 0 callId: 4
+ I/ReactNativeJNI: JavaNativeModule::invoke : reactMethodId: 0 callId : 4
+D/JavaModuleWrapper: JavaModuleWrapper.java invoke: methodId: 0
+ D/MyReactNativeModule: callMe()
+```
+
+NativeModules creation sequence logs:
+```
+ I/ReactNativeJNI: NativeModuleProxy get: Timing
+ I/ReactNativeJNI: JSINativeModules.createModule:: name = Timing
+ I/ReactNativeJS: 'NativeModules.js genModule: moduleName: ', 'Timing'
+```
+
+### JavascriptModuleRegistry
+
+```java
+/**
+ * Interface denoting that a class is the interface to a module with the same name in JS. Calling
+ * functions on this interface will result in corresponding methods in JS being called.
+ *
+ * <p>When extending JavaScriptModule and registering it with a CatalystInstance, all public methods
+ * are assumed to be implemented on a JS module with the same name as this class. Calling methods on
+ * the object returned from {@link ReactContext#getJSModule} or {@link CatalystInstance#getJSModule}
+ * will result in the methods with those names exported by that module being called in JS.
+ *
+ * <p>NB: JavaScriptModule does not allow method name overloading because JS does not allow method
+ * name overloading.
+ */
+@DoNotStrip
+public interface JavaScriptModule {}
+
+/* Class responsible for holding all the {@link JavaScriptModule}s. Uses Java proxy objects to
+ * dispatch method calls on JavaScriptModules to the bridge using the corresponding module and
+ * method ids so the proper function is executed in JavaScript.
+ */
+public final class JavaScriptModuleRegistry {
+  private final HashMap<Class<? extends JavaScriptModule>, JavaScriptModule> mModuleInstances;
+}
+```
+
+`invoke` on this `JavascriptModule` forwards to CatalystInstance and finally JS via:
+```java
+mCatalystInstance.callFunction(getJSModuleName(), method.getName(), jsArgs);
+```
+
+
+### NativeModuleRegistry
+
+Mainly holds a map of Java native modulename to ModuleHolder
+```java
+public class NativeModuleRegistry {
+  private final ReactApplicationContext mReactApplicationContext;
+  private final Map<String, ModuleHolder> mModules;
+  private final String TAG = NativeModuleRegistry.class.getSimpleName();
+}
+```
+
+`ModuleHolder` instances are constructed during processPackage i.e. before context/catalyst creation,
+but `initialize` is done post `notifyJSInstanceInitialized()`.
+
+
+### JSIExecutor
+
+Native -> JS calls:
+`JSIExecutor::callFunction` and `JSIExecutor::invokeCallback` calls into `MessageQueue.js callFunctionReturnFlushedQueue` and `MessageQueue.js invokeCallbackAndReturnFlushedQueue` 
+via comman global variable: `__fbBatchedBridge` (See `JSIExecutor.bindBridge` for details).
+
+
+Main flow of queue for JS -> Native calls:
+`MessageQueue.js -> nativeEnqueueCall` -> `global.nativeFlushQueueImmediate(queue);`
+-> `JSIExecutor.nativeFlushQueueImmediate()` -> `JSIExecutor::callNativeModules` -> `JSToNative: callNativeModules:`
