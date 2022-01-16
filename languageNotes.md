@@ -865,3 +865,11 @@ if(tmp!== undefined) {
 
 access of `this` in a subclass before `super()` call is not allowed, 
 because in ES6 this is being born in the base class, therefore `super()` is needed to initialize it.
+
+
+
+### Types of functions:
+
+1. `constructible and callable`: all `function` keyword declaration/expression can work as both callable and constructible
+2. `callable` only - `arrow functions` are typically used, as they are not constructible(calling them with new is an error).
+3. `constructible` only - `class keyword` based classes, even though they act like functions under the hood, can only be called with new, calling them without new is an error.

@@ -69,3 +69,13 @@ function n2(a2) {
 
 in will also return true if key gets found somewhere in the prototype chain, whereas Object.hasOwnProperty (like the name already tells us), will only return true if key is available on that object directly (its "owns" the property).
 
+
+### Object keys that are symbols dont take part in stringification (JSON.stringify)
+
+```js
+const ll = {
+    [Symbol.for('hi')]: 111, // omitted in JSON.stringify
+    abc: 12
+};
+console.log(JSON.stringify(ll));// {"abc": 12}
+```

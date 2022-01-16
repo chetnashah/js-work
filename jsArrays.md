@@ -32,7 +32,12 @@ if `value` is not an array, it is simply added to the result.
 
 ### slice
 
-The `slice()` method returns a shallow copy of a portion of an array into a new array object selected from `begin` to `end` (end not included) where begin and end represent the index of items in that array.
+The `slice()` method returns a `shallow copy` of a portion of an array into a new array object selected from `begin` to `end` (end not included) where begin and end represent the index of items in that array.
+
+slice does not alter the original array. It returns a shallow copy of elements from the original array. Elements of the original array are copied into the returned array as follows:
+
+For objects, slice copies object references into the new array. Both the original and new array refer to the same object. If an object changes, the changes are visible to both the new and original arrays.
+For strings, numbers and booleans (not String, Number and Boolean objects), slice copies the values into the new array. Changes to the string, number, or boolean in one array do not affect the other array.
 
 ```js
 arr.slice([begin[, end]])  // note begin, end are both optional
@@ -119,3 +124,8 @@ alphaNumeric = alpha.concat(numeric);
 console.log(alphaNumeric);
 // expected output: Array ["a", "b", "c", Array [1, 2, 3]]
 ```
+
+### length
+
+`length` is a non-enumerable property on an array, i.e. won't appear in `Object.keys` or won't 
+be copied in case of object spread `{...arr}`. 
