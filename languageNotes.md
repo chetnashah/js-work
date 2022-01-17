@@ -210,6 +210,26 @@ A.color = 'red';
 
 * Spread operator is also defined for objects
 
+* Spread does a shallow copy
+
+`undefined` and `null` are spreadable in object context, but not in array context:
+```js
+const a = {...undefined}; // Ok! a = {}
+const b = {...null}l // Ok! b = {}
+
+// Error cases!
+const c = [...undefined]; // undefined is not iterable
+const d = [...null]// null is not iterable
+```
+
+Spreading of numbers/boolean primitives is a no-op
+```js
+const a = {...1} // {}
+const b = {...true} // {}
+```
+
+Spreading of strings work like spreading of arrays.
+
 #### What are constructs that can be used when working with iterables?
 
 Ans: `for-of` loop and `...iterable` i.e spread operator.
@@ -873,3 +893,166 @@ because in ES6 this is being born in the base class, therefore `super()` is need
 1. `constructible and callable`: all `function` keyword declaration/expression can work as both callable and constructible
 2. `callable` only - `arrow functions` are typically used, as they are not constructible(calling them with new is an error).
 3. `constructible` only - `class keyword` based classes, even though they act like functions under the hood, can only be called with new, calling them without new is an error.
+
+
+### Can you use object as object key in JS?
+NO. All object keys are strings.
+
+```js
+const j = {};
+const o = {};
+o[j] = 11;// j as a key is serialized first
+console.log(o); // { [object object]: 11}
+```
+
+
+### JS property getter/setters
+
+Kind of act like property handlers and primarily used for derived properties/encapsulation
+
+```js
+
+
+const obj = {
+    name: 'chet',
+    surname: 'doe',
+    get full(){
+        return this.name + ' ' + this.surname;
+    },
+    set full(fullName){
+        this.name = fullName.split(' ')[0];
+        this.surname = fullName.split(' ')[1];
+    }
+}
+console.log(obj.full);// chet doe
+obj.full = 'John wick';
+console.log(obj.name);// John
+console.log(obj.surname);// wick
+console.log(obj.full);// John wick
+```
+
+### this pitfall: method extraction/reference
+
+since functions are first class values, they can be extracted referecned, and saved
+as a different variable from their object. 
+When called in such a case, this points to the the object to the left of the method call. which can be absent.
+
+In case of `strict mode`, `this` for such referenced method will be undefined, and globalThis in case of sloppy mode.
+```js
+"use strict"; const j3 = {
+  first: 'jane',
+  says(text){ 
+    return `${this.first} says ${text}`;
+  }
+}
+const ff = j3.says;
+ff('hi'); // Error, cannot read property first of undefined
+```
+
+Remedy: explicit this binding via `bind`
+```js
+"use strict"; const j3 = {
+  first: 'jane',
+  says(text){ 
+    return `${this.first} says ${text}`;
+  }
+}
+const ff = j3.says.bind(j3);// says now has a fixed this added already
+```
+
+
+### Reflect.ownKeys
+
+Contains both enumerable, non-enumerable keys.
+Also contains symbol keys.
+
+
+### Prototype pitfall: setting always sets own property and values, even though get will look into the chain.
+
+object setting property/value always sets own key/value.
+```js
+const p = {
+  protoProp: 'a'
+};
+
+const o = {
+  objProp: 'b'
+};
+Object.setPrototypeOf(o, p);
+console.log(o.protoProp);// a - fetches from chain
+o.protoProp = 'something'; // protoProp actually is own property of o, and shadows proto link to p.
+```
+
+
+### Check: an object is prototype(ProtoLink based) of another object (anywhere in the protolink chain) ?
+
+Use `p.isPrototypeOf(o)`. will return true if `p` appears anywhere in protolink chain of `o`.
+
+```js
+const a = { k: 1};
+const b = Object.create(a);
+const c = Object.create(b);
+console.log(c.k);
+console.log(a.isPrototypeOf(c));
+```
+
+
+### reusing functions between objects by putting them in prototype
+
+```js
+const PersonProto = {
+  describe() {
+    return 'Person named ' + this.name;
+  },
+};
+const jane = {
+  __proto__: PersonProto,
+  name: 'Jane',
+};
+const tarzan = {
+  __proto__: PersonProto,
+  name: 'Tarzan',
+};
+```
+
+### using constructor property to create similar objects
+
+Even if you dont know class, you can create  a new object by getting hold of constructor function via obj.constructor.
+
+```js
+class Person{
+  constructor(name) {
+    this.name = name;
+  }
+  describe(){
+    console.log('Hi ' + this.name);
+  }
+}
+
+var p = new Person('jane');
+p.describe();// Hi  jane
+var p2 = new p.constructor('chet');
+p2.describe();// Hi chet
+p2 instanceof Person; // true
+```
+
+### class fields go on the instances, class methods/getters go on the prototype
+
+```js
+class IncrementingCounter {
+  _count = 0;// class fields goes on instance
+
+  get value(){// goes on IncrementingCounter.prototype
+    return this._count;
+  }
+  increment(){// goes on IncrementingCounter.prototype
+    this._count++;
+  }
+}
+
+var ii = new IncrementingCounter();
+console.log(ii._count);// 0
+console.log(ii.value);// 0
+ii.increment();
+console.log(ii.value); // 1
+```
