@@ -1056,3 +1056,79 @@ console.log(ii.value);// 0
 ii.increment();
 console.log(ii.value); // 1
 ```
+
+### Get the name of class that created an instance
+
+`instance.constructor.name` gives you name of class/constructor Fn that created a given instance.
+
+### static properties of class directly go on constructor Fn
+
+```js
+class C {
+    static k = 1;
+    static callMe(){
+        console.log('call me!');
+    }
+}
+
+C.callMe();
+console.log(C.k);
+```
+
+
+### You cannot assign to this directly
+
+```js
+function test(){
+    this = {};
+    return this;
+}
+console.log(test());// SyntaxError: Invalid left-hand side in assignment
+```
+
+### `__proto__`
+
+```js
+class Object {
+  get __proto__() {
+    return Object.getPrototypeOf(this);
+  }
+  set __proto__(other) {
+    Object.setPrototypeOf(this, other);
+  }
+  // ···
+}
+```
+
+### dynamic dispatch for class method call
+
+```js
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+  describe() {
+    return 'Person named '+this.name;
+  }
+}
+const jane = new Person('Jane');
+
+```
+the method call `jane.describe()` happens in two steps:
+
+1. Dispatch: In the prototype chain of jane, find the first property whose key is 'describe' and retrieve its value.
+
+`const func = jane.describe;`
+
+2. Call: Call the value, while setting this to jane.
+
+`func.call(jane)`;
+
+
+ou can make the same method call directly, without dispatching:
+
+`Person.prototype.describe.call(jane)`
+Note that this always points to the beginning of a prototype chain. That enables .describe() to access .name
+
+
+

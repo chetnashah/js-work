@@ -59,6 +59,10 @@ If no element passes the test, `undefined` is returned.
 arr.find(callback(element[, index[, array]])[, thisArg])
 ```
 
+### push
+
+mutates array in place by adding element at the end
+
 ### splice
 
 Modifies array in place.
@@ -76,7 +80,7 @@ JS arrays do not have a remove method, use `filter` instead, or `splice` if want
 
 ### unshift
 
-The `unshift()` method adds one or more elements to the beginning of an array and returns the new length of the array. mutates the array.
+The `unshift()` method adds one or more elements to the beginning of an array and returns the new length of the array. mutates the array i.e destructive
 
 `arr.unshift(element1[, ...[, elementN]])`: The new length property of the object upon which the method was called.
 
@@ -92,7 +96,9 @@ console.log(array1);
 
 ### shift
 
-The `arr.shift()` method removes the first element from an array and returns that removed element. This method changes the length of the array. Mutates the array.
+The `arr.shift()` method removes the first element from an array and returns that removed element. This method changes the length of the array. 
+Mutates the array.
+Destructively removes first element
 
 Returns: The removed element from the array; undefined if the array is empty.
 ```js
@@ -106,6 +112,10 @@ console.log(array1);
 console.log(firstElement);
 // expected output: 1
 ```
+
+### pop
+
+destructively remove last element
 
 
 ### Symbol.isConcateSpreadable to configure spreading behavior of array
@@ -129,3 +139,52 @@ console.log(alphaNumeric);
 
 `length` is a non-enumerable property on an array, i.e. won't appear in `Object.keys` or won't 
 be copied in case of object spread `{...arr}`. 
+
+
+### Holes
+
+An Array is sparse if the range of indices has holes in it. That is, some indices are missing.
+
+1. We can create holes by skipping indices when assigning elements:
+
+```js
+const arr = [];
+arr[0] = 'a';
+arr[2] = 'c';
+```
+
+2. Another way of creating holes is to skip elements in Array literals:
+
+```js
+const arr = ['a', , 'c'];
+assert.deepEqual(Object.keys(arr), ['0', '2']);
+```
+
+3. We can also delete Array elements:
+
+```js
+const arr = ['a', 'b', 'c'];
+assert.deepEqual(Object.keys(arr), ['0', '1', '2']);
+delete arr[1];
+assert.deepEqual(Object.keys(arr), ['0', '2']);
+```
+
+#### Array operations and holes
+
+nothing to remember, better test in console
+
+`filter` will remove holes:
+```js
+['a',,'b'].filter(x => true) //[ 'a', 'b' ]
+```
+
+`every/any` will ignore holes
+```js
+['a', ,'a'].every(x => x === 'a')// true
+```
+
+`map` will preserve holes
+```js
+['a',,'b'].map(x => 'c') //[ 'c', , 'c' ]
+```
+

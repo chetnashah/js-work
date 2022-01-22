@@ -1,3 +1,4 @@
+// closed over due to closure, keyed by instance.
 const privates = new WeakMap();
 
 function Public(name) {
