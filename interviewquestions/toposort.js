@@ -17,7 +17,7 @@ function toposort(depArr) {
         if(!graph[dependency]) {
             graph[dependency] =[];
         }
-        graph[dependency].push(dependent);
+        graph[dependency].push(dependent);// directed edges from dependency to dependent, graph stored inverted edges from question as zero deg nodes resolve first
         if(!indeg[dependent]) {
             indeg[dependent] = 0;
         }
