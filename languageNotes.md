@@ -1132,3 +1132,133 @@ Note that this always points to the beginning of a prototype chain. That enables
 
 
 
+### const and for-of loops
+
+Note: const initialization needs to happen in the same line.
+
+```js
+// fine - const and for-of, new binding per iteration
+/** // equivalent in for-of
+ * {
+    const __it = a[Symbol.iterator]();
+    let __res;
+    while ((__res = __it.next()) && !__res.done) {
+        const e = __res.value;
+        …
+    }
+}
+*/
+for(const i of [1,2,3,4,5]){
+    console.log(i);
+}
+
+// fine - new binding per iteration
+for(const j in {a: 1, b: 2}){
+    console.log(j);
+}
+
+// syntax error!
+for(const i=0; i<10; i++) {
+    console.log(i);
+}
+```
+
+### let and for loops
+
+
+
+
+### Reference Errors
+
+1. `x is not defined` - when variable not defined anywhere in code.
+
+2. `cannot access j before initialisation` - Occurs when variable accessed in TDZ
+```js
+console.log(j);
+let j = 1;
+```
+
+### let and const hoisting
+
+The variables are created when their containing Lexical Environment is instantiated (i.e. hoisted to block scope).
+let and const declarations define variables that are scoped to the running execution context's LexicalEnvironment
+but may not be accessed in any way until the variable’s LexicalBinding is evaluated.
+
+
+### Reference specification type
+
+A Reference is a resolved name or property binding
+
+Three components:
+1. base value component
+2. referenced name component: String/symbol
+3. boolean valued strict flag
+
+Base value possibilities: 
+1. undefined
+2. object
+3. boolean
+4. string
+5. symbol
+6. number
+7. Environment Record
+
+A base value component of `undefined` indicates that reference could not be resolved to a binding.
+
+#### GetBase ( V )
+Assert: Type(V) is Reference.
+Return the base value component of V.
+
+#### GetReferencedName ( V )
+Assert: Type(V) is Reference.
+Return the referenced name component of V.
+
+#### HasPrimitiveBase(V)
+
+1. Assert: Type(V) is Reference.
+2. If Type(V's base value component) is Boolean, String, Symbol, or Number, return true; otherwise return false.
+
+#### IsPropertyReference(V)
+1. Assert: Type(V) is Reference.
+2. If either base value component of V is `Object` or `HasPrimitiveBase(V)` is true, then return true, otherwise return false.
+
+If a reference is not property reference, then Base must be Environment record.
+
+
+
+### Environment Records
+
+Common Methods:
+```
+HasBinding(N): determine if environment record has binding for string value N.
+
+CreateMutableBinding(N,D):
+
+CreateImmutableBinding(N, S):
+
+InitializeBinding(N,V):
+
+SetMutableBinding(N, V, S):
+
+GetBindingValue(N,S):
+
+DeleteBinding(N):
+
+HasThisBinding():
+
+HasSuperBinding():
+
+WithBaseObject():
+```
+
+Two kinds:
+1. Declarative Environment Records: Function Environment Records and module environment records are subclasses of declarative Environment record.
+   Each declarative record is associated with program scope containing variable, constant, let, class, module, import and function declarations.
+   A declarative environment record binds set of identifiers defined by declarations contained within scope.
+2. Object Environment Records:
+  Each object Environment Record is associated with an object called its binding object. 
+  An object Environment Record binds the set of string identifier names that directly correspond to the property names of its binding object
+  Because properties can be dynamically added and deleted from objects, the set of identifiers bound by an object Environment Record may potentially change as a side-effect of any operation that adds or deletes properties. 
+  Any bindings that are created as a result of such a side-effect are considered to be a mutable binding even if the Writable attribute of the corresponding property has the value false. 
+  Immutable bindings do not exist for object Environment Records.
+
