@@ -1340,4 +1340,5 @@ It can compare any two values, whether they are objects or not!
 In our JavaScript universe, both variables and properties act like “wires.” However, the wires of properties start from objects rather than from our code:
 All wires always point to values
 
-
+a property always points to a value! 
+It can’t point to another property or a variable. In general, all wires in our universe point to values
