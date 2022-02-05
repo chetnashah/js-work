@@ -1262,3 +1262,82 @@ Two kinds:
   Any bindings that are created as a result of such a side-effect are considered to be a mutable binding even if the Writable attribute of the corresponding property has the value false. 
   Immutable bindings do not exist for object Environment Records.
 
+### function and early activation
+
+This is ok:
+```js
+assert.equal(foo(), 123); // OK
+function foo() { return 123; }
+```
+
+If declared via let/const, TDZ comes into play and not ok:
+```js
+assert.throws(
+  () => bar(), // before declaration
+  ReferenceError);
+
+const bar = () => { return 123; };
+
+assert.equal(bar(), 123); // after declaration 
+```
+
+
+### Class declaration and in place activation
+
+```js
+assert.throws(
+  () => new MyClass(),
+  ReferenceError);
+// TDZ before this declaration
+class MyClass {}
+
+assert.equal(new MyClass() instanceof MyClass, true);
+```
+
+Reason for inplace activation:
+The operand of extends is an expression. Therefore, you can do things like this:
+```js
+const identity = x => x;
+class MyClass extends identity(Object) {}
+```
+
+
+### setting property values in primitive values
+
+If our code runs in the `strict` mode, setting a property on a primitive value will error. 
+Otherwise, the assignment is ignored.
+
+```js
+'use strict';
+let a = true;
+a.opposite = false;
+console.log(a.opposite);// Uncaught TypeError: Cannot create property 'opposite' on boolean 'true'
+```
+
+
+### Assigning to null (syntax error!)
+
+```js
+null = 10; // Uncaught SyntaxError: Invalid left-hand side in assignment
+```
+
+### primitives vs objects
+
+null, undefined, booleans, numbers, and strings—have “always existed.” 
+We can’t create a new string or a new number, we can only “summon” that value,
+Every time we use the `{}` object literal, we create a brand new object value
+
+### Same value equality (Object.is)
+
+Despite `Object` in the method name, `Object.is` is not specific to objects. 
+It can compare any two values, whether they are objects or not!
+
+`NaN === NaN` is `false`, although they are the same value.
+`-0 === 0` and `0 === -0` are true, although they are different values.
+
+### 
+
+In our JavaScript universe, both variables and properties act like “wires.” However, the wires of properties start from objects rather than from our code:
+All wires always point to values
+
+
