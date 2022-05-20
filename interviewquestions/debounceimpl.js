@@ -3,13 +3,13 @@
 // call a function only when n ms have elapsed since the last call
 function debounce(wrapFn, delayMs) {
     let timerId = null;
-    return function f() {
+    return function f(...args) { // support external args
         if (timerId) {
             clearTimeout(timerId);
-            timerId = setTimeout(wrapFn, delayMs);
-        } else {
-            timerId = setTimeout(wrapFn, delayMs);
         }
+        timerId = setTimeout(() => {
+            wrapFn.apply(null, args);// this for callback will be null, along with args
+        }, delayMs);
     }
 }
 
