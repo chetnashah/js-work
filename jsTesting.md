@@ -92,3 +92,15 @@ test('the data is peanut butter', async () => {
 })
 ```
 
+## Supporting external syntax in jest
+
+Jest runs the code in your project as JavaScript, but **if you use some syntax not supported by Node out of the box (such as JSX, TypeScript, Vue templates) then you'll need to transform that code into plain JavaScript, similar to what you would do when building for browsers.**
+
+Jest supports this via the `transform` configuration option.
+
+A transformer is a module that provides a method for transforming source files. For example, if you wanted to be able to use a new language feature in your modules or tests that aren't yet supported by Node, you might plug in a code preprocessor that would transpile a future version of JavaScript to a current one.
+
+Jest will cache the result of a transformation and attempt to invalidate that result based on a number of factors, such as the source of the file being transformed and changing configuration.
+
+`ts-jest` use case: **While babel-jest by default will transpile TypeScript files, Babel will not verify the types. If you want that you can use ts-jest.**
+
