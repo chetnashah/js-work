@@ -188,3 +188,49 @@ nothing to remember, better test in console
 ['a',,'b'].map(x => 'c') //[ 'c', , 'c' ]
 ```
 
+## ForEach
+
+There is no way to stop or break a `forEach()` loop other than by throwing an exception. If you need such behavior, the `forEach()` method is the wrong tool.
+
+Array methods: `every()`, `some()`, `find()`, and `findIndex()` test the array elements with a predicate returning a truthy value to determine if further iteration is required.
+
+`forEach` does not wait for promises. Make sure you are aware of the implications while using promises.
+
+**forEach() does not make a copy of the array before iterating.**
+
+## Reduce
+
+The `reduce()` method itself does not mutate the array it is used on. However, it is possible for code inside the callback function to mutate the array.
+
+### Typical behaviors and edge cases
+
+* If elements are appended to the array after reduce() begins to iterate over the array, the callback function does not iterate over the appended elements.
+* If existing elements of the array do get changed, the values passed to the callback function will be the values from the time that `reduce()` was first called on the array.
+* Array elements that are deleted after the call to reduce() begins and before being iterated over are not visited by reduce().
+
+If the array only has one element (regardless of position) and no initialValue is provided, or if initialValue is provided but the array is empty, the solo value will be returned without calling callbackFn.
+
+If initialValue is provided and the array is not empty, then the reduce method will always invoke the callback function starting at index 0.
+
+If initialValue is not provided then the reduce method will act differently for arrays with length larger than 1, equal to 1 and 0, as shown in the following example:
+
+
+
+### Parameters
+
+`callbackFn`:
+A "reducer" function.
+
+The function is called with the following arguments:
+
+`previousValue`: the value resulting from the previous call to callbackFn. On first call, initialValue if specified, otherwise the value of `array[0]`.
+
+`currentValue`: the value of the current element. On first call, the value of `array[0]` if an initialValue was specified, otherwise the value of `array[1]`.
+
+`currentIndex`: the index position of currentValue in the array. On first call, 0 if initialValue was specified, otherwise 1.
+
+`array`: the array to traverse.
+
+`initialValue` Optional
+A value to which previousValue is initialized the first time the callback is called. If initialValue is specified, that also causes currentValue to be initialized to the first value in the array. If initialValue is not specified, previousValue is initialized to the first value in the array, and currentValue is initialized to the second value in the array.
+
