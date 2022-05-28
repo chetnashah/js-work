@@ -1,4 +1,40 @@
 
+
+## For loop and let
+
+`for(let i;;){}`
+`i` gets a new binding for every iteration of the loop.
+
+This means that every closure captures a different i instance.
+
+Here is how babel will transform:
+```js
+for (let i = 0; i < 3; i++) {
+    i++;
+    setTimeout(function() {
+        console.log(i );
+    }, 100);
+    i--;
+}
+```
+into 
+```js
+"use strict";
+
+var _loop = function _loop(_i) {// different i binding per i
+  _i++;
+  setTimeout(function () {
+    console.log(_i);
+  }, 100);
+  _i--;
+  i = _i;
+};
+
+for (var i = 0; i < 3; i++) {
+  _loop(i);
+}
+```
+
 ### NaN is not equal to itself
 
 ```js
