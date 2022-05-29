@@ -7,7 +7,7 @@ module.exports = class MyPromise {
         this.onFailBind = this.onFailBind.bind(this);
         this.thenCbs = [];// needs to be an array because one can register multiple via: p.then(cb1); p.then(cb2);
         this.catchCbs = [];
-        // directly schedule executor
+        // directly schedule executor, onSuccessBind function does queueMicroTask to runCallbacks
         executorFn(this.onSuccessBind, this.onFailBind);
     }
 

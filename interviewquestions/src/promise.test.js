@@ -64,6 +64,16 @@ describe("all promise tests" ,() => {
         }).then(thenFn);
    });
 
+    it('is always asynchronous', () => {
+      const MyPromise = require('./promise');
+      const p = new MyPromise((resolve, reject) => { resolve(5); })
+      expect(p.value).not.toBe(5);
+    });
+
+    it('resolves a nested promise, by following it, before calling then', () => {
+      
+    });
+
 //    it('supports then chainging', (done) => {
 //     const MyPromise = require('./promise');
 //     const thenFn = jest.fn((args) => {
