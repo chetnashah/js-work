@@ -1,4 +1,8 @@
-
+/**
+ * https://www.promisejs.org/implementing/
+ * https://www.freecodecamp.org/news/how-to-implement-promises-in-javascript-1ce2680a7f51/
+ * 
+ */
 module.exports = class MyPromise {
     constructor(executorFn) {
         this.state = 'PENDING';
