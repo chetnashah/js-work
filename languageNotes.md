@@ -500,7 +500,7 @@ The instance object is created in different locations in ES6 and ES5:
 In ES6, it is created in the base constructor, the last in a chain of constructor calls. The superconstructor is invoked via super(), which triggers a constructor call.
 In ES5, it is created in the operand of new, the first in a chain of constructor calls. The superconstructor is invoked via a function call.
 
-Subclassing in ES5:
+Subclassing in ES5 (refer [Subclassing](jssubclassing.md)):
 ```js
 function Person(name) {
     this.name = name;
@@ -510,7 +510,9 @@ function Employee(name, title) {
     Person.call(this, name);
     this.title = title;
 }
-Employee.prototype = Object.create(Person.prototype);
+
+Object.setPrototypeof(Employee, Person);// chain between constructor
+Employee.prototype = Object.create(Person.prototype);// chain between constructor.prototype
 Employee.prototype.constructor = Employee;
 ```
 
