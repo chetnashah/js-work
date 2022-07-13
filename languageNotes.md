@@ -165,6 +165,13 @@ console.log(Array.prototype.map in arr);// false, Array.prototype.map coerces to
 
 `Symbol.iterator` symbol specifies the default iterator for an object. Used by `for...of`.
 
+### instanceof operator
+
+Takes two arguments i.e obj and Constructor to test - e.g. `obj instanceof Constructor`.
+
+checks if proto-link-chain of `obj` contains `Constructor.prototype` object.
+
+
 
 ### class properties of arrow functions
 
