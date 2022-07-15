@@ -1,15 +1,15 @@
 // top level fn needs two arguments, global and factory
 function create(global, factory) {
-    if(typeof exports !== "undefined") {
+    if(typeof exports !== "undefined") {// common js environment
         // put in exports
         factory(exports);
     } else {
-        // put in window
-        var mod = {
+        // put in window or supplied globalThis
+        var mod = {// make a fresh exports object
             exports: {}
         };
         factory(mod.exports);
-        global.log = mod.exports;
+        global.log = mod.exports;// the choice of name with which to install the module exports, in global should be configurable
     }
 }(globalThis,function abc(exports) {
     // module is wrapped in a fun for privacy, and gets parameter exports to expose exports, 
