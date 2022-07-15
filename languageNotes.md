@@ -1351,3 +1351,91 @@ All wires always point to values
 
 a property always points to a value! 
 It can’t point to another property or a variable. In general, all wires in our universe point to values
+
+
+## Void operator
+
+`void expr` -evaluates expr and returns undefined. 
+Examples:
+```
+    > void 0
+    undefined
+    > void(0)
+    undefined
+```
+
+## Expression, statements and declarations.
+
+A `statement` performs an action.
+
+An `expression` usually returns a value.
+
+An `expression` can be used where a `statement` is expected, it is called an `expression statement`.
+
+A statement cannot be used where an expression is expected.
+
+A `declaration` is a statement that usually introduces some variable into scope.
+
+Something like this can be both expression and a statement, depending on where it is used:
+```js
+{// parsed as statement
+    foo: sum(1,2)
+}
+
+var abc = {// parsed as object literal expression
+    foo: sum(1,2)
+}
+```
+
+### 
+Statements can have labels e.g. following is valid javascript:
+```js
+function ff() {
+    hey: var k = 2;
+}
+```
+but there is no goto statement in js, labels only can be used with `break` or `continue`
+e.g.
+```js
+let str = '';
+
+loop1:
+for (let i = 0; i < 5; i++) {
+  if (i === 1) {
+    continue loop1;
+  }
+  str = str + i;
+}
+
+console.log(str);
+```
+
+### Standalone blocks / Curly braces without anything also is a valid block i.e. collection of statemetns
+
+It might surprise you that JavaScript has blocks that can exist on their own.
+
+```js
+{ // Parsed as block statement
+    let k = 1;
+    let j = 2;
+    console.log(k+j);
+}
+```
+
+### Semicolon and comma operator
+
+`Semicolon` can used to chain statements:
+```js
+function f() {
+  ab(); cd();
+}
+```
+
+`Comma operator` can be used to **chain expressions, within a parantheses**:
+```js
+var x = ("A", "b");
+console.log(x);
+
+// another example
+console.log(("a", "b")); // b
+```
