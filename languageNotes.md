@@ -22,6 +22,9 @@ let d2 = new d.constructor('goofy');// d2 is a dog.
 // constructor is object
 console.log({}.constructor);// Object
 console.log([].constructor);// Array
+
+//verification check
+Dog.prototype.constructor == Dog; // true
 ```
 
 #### ES6
