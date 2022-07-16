@@ -1,5 +1,33 @@
 
 
+## Ways to create objects
+
+### Object literal
+
+`{}`
+
+### Object.create
+
+`var k = Object.create(protoObject)`
+
+### Object Constructor
+
+`var obj = Object()`
+
+## all object literals `{}` have a protolink chain to `Object.prototype` object (which has useful methods)
+
+e.g.
+```js
+({}).toString(); // toStringMethod comes from Object.prototype object
+```
+
+If you want to avoid this, You can use `Object.create(null)` to create object without protolink.
+
+```js
+var vv = Object.create(null)
+// vv.toString() // Syntax Error!
+``` 
+
 ### assignment vs definition
 
 https://2ality.com/2012/08/property-definition-assignment.html

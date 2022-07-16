@@ -1,7 +1,11 @@
 
 #### the "constructor" property
 
-The constructor property sits on the .prototype,
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor
+
+The `constructor` property returns a reference to the Object constructor function that created the instance object. Note that the value of this property is a reference to the function itself, not a string containing the function's name.
+
+The constructor property sits on the `.prototype`,
 and holds a reference to the function that created a given instance e.g.
 
 ``` js
@@ -19,12 +23,15 @@ console.log(d.constructor);// function Dog {}
 let d2 = new d.constructor('goofy');// d2 is a dog.
 
 // for plain literal objects,
-// constructor is object
+// constructor is base Object/Array, and constructor property sits on Object.prototype object
 console.log({}.constructor);// Object
 console.log([].constructor);// Array
 
 //verification check
 Dog.prototype.constructor == Dog; // true
+
+// verification check
+({}).constructor === Object
 ```
 
 #### ES6
@@ -1442,3 +1449,30 @@ console.log(x);
 // another example
 console.log(("a", "b")); // b
 ```
+
+
+## hasOwn method on Object
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn
+
+The `Object.hasOwn(instance, propStringOrSymbol)` static method returns true if the specified object has the indicated property as its own property. If the property is inherited, or does not exist, the method returns false.
+
+returns `true` if the specified property is a direct property of the object — even if the property value is null or undefined.
+
+`Note` - Unlike the `in` operator, this method does not check for the specified property in the object's prototype chain.
+
+```js
+const object1 = {
+  prop: 'exists'
+};
+
+console.log(Object.hasOwn(object1, 'prop'));
+// expected output: true
+
+console.log(Object.hasOwn(object1, 'toString'));
+// expected output: false
+
+console.log(Object.hasOwn(object1, 'undeclaredPropertyValue'));
+// expected output: false
+```
+
