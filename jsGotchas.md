@@ -84,12 +84,14 @@ Number.isNaN(NaN); // true
 // Number.isNaN is false for all other 
 ```
 
-In fact below definitions are equivalent:
+To get a value that might be a number : use`parseInt`,it can be used to convert int/numering strings -> numbers.
+and to `NaN` in all other cases, which can be followed by an `isNaN`/`Number.isNaN` check.
 
+In fact below definitions are equivalent:
 ```js
 
 function n1(a1) {
-    if(typeof a1 === 'number' && isNaN(a1)) {
+    if(typeof a1 === 'number' && isNaN(a1)) {// isNaN alone is not enough, guard it with typeof check or parseInt check
         return true;
     }
     return false;
@@ -97,9 +99,23 @@ function n1(a1) {
 
 // same semantics as above
 function n2(a2) {
-    return Number.isNaN(a2);
+    return Number.isNaN(a2); // will not do any conversion, plain check for NaN
 }
 ```
+
+Reference implementation: (that only checks pure numbers, no string numbers e.g. `'123'` not allowed)
+```js
+function isValidNumber(n){
+    if(typeof n == 'number' && Number.isNaN(n)) {
+        return false;
+    }
+    if(typeof n != 'number') {
+        return false;
+    }
+    return true;
+}
+```
+
 
 ### `in` operator vs `hasOwnProperty`
 
