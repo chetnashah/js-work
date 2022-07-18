@@ -105,6 +105,26 @@ try {
 }
 ```
 
+#### TypeError
+
+The TypeError object represents an error when an operation could not be performed, typically (but not exclusively) when a value is not of the expected type.
+
+A TypeError may be thrown when:
+
+* an operand or argument passed to a function is incompatible with the type expected by that operator or function; or
+* when attempting to modify a value that cannot be changed; or
+* when attempting to use a value in an inappropriate way.
+
+e.g. 
+`null.f()` or `null.k = 2;` throws a `TypeError`.
+
+#### ReferenceError
+
+The ReferenceError object represents an error when a variable that doesn't exist (or hasn't yet been initialized) in the current scope is referenced.
+
+e.g.
+`let a = undefinedVariable`
+
 ### Extending Errors for fun and profit.
 
 https://stackoverflow.com/questions/1382107/whats-a-good-way-to-extend-error-in-javascript
