@@ -181,8 +181,10 @@ Takes two arguments i.e obj and Constructor to test - e.g. `obj instanceof Const
 
 checks if proto-link-chain of `obj` contains `Constructor.prototype` object.
 
+Note: `Number(1) instanceof Object = false`, but `new Number(1) instanceof Object = true` - find out why?
 
-
+Also `true instanceof Boolean = false`.
+ 
 ### class properties of arrow functions
 
 There is a babel proposal for doing following:
@@ -985,6 +987,11 @@ const ff = j3.says.bind(j3);// says now has a fixed this added already
 Contains both enumerable, non-enumerable keys.
 Also contains symbol keys.
 
+e.g.
+```js
+console.log(Object.keys([]));    // []
+console.log(Reflect.ownKeys([]));// length
+```
 
 ### Prototype pitfall: setting always sets own property and values, even though get will look into the chain.
 

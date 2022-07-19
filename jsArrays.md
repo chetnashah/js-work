@@ -59,6 +59,14 @@ If no element passes the test, `undefined` is returned.
 arr.find(callback(element[, index[, array]])[, thisArg])
 ```
 
+### indexOf
+
+`indexOf` uses strict equality i.e. `===` for comparision
+
+### includes
+
+`includes` uses `Object.is` for comparision, instead of `===`.
+
 ### push
 
 mutates array in place by adding element at the end
@@ -116,6 +124,14 @@ console.log(firstElement);
 ### pop
 
 destructively remove last element
+
+
+### at method
+
+The `at()` method takes an integer value and returns the item at that index, allowing for positive and negative integers. Negative integers count back from the last item in the array.
+
+This is not to suggest there is anything wrong with using the square bracket notation. For example array[0] would return the first item. However instead of using array.length for latter items; e.g. `array[array.length-1]` for the last item, you can call `array.at(-1)`. (See the examples below)
+
 
 
 ### Symbol.isConcateSpreadable to configure spreading behavior of array

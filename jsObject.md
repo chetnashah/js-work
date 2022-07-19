@@ -44,3 +44,8 @@ The primary purpose of this function is to add an own (direct) property to obj, 
 
 **Note** - babel-plugin-class-properties When loose is true, class properties are compiled to use an assignment expression instead of Object.defineProperty.
 
+## Object's protolink is Function.prototype
+
+```js
+Object.__proto__ === Function.prototype; // true
+```

@@ -84,6 +84,8 @@ Number.isNaN(NaN); // true
 // Number.isNaN is false for all other 
 ```
 
+`NaN` interaction with `Math.min/Math.max` - ans is `NaN` if any argument is `NaN`.
+
 To get a value that might be a number : use`parseInt`,it can be used to convert int/numering strings -> numbers.
 and to `NaN` in all other cases, which can be followed by an `isNaN`/`Number.isNaN` check.
 
