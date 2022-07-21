@@ -160,7 +160,9 @@ like case `2` one needs to put
 
 ### javascript `in` operator
 
-The `in` operator returns true for properties in current object and also the prototype chain. 
+`prop in object` - syntax
+
+The `in` operator **returns true for properties in current object and also the prototype chain.**
 (If you want to check for only non-inherited properties, use `Object.prototype.hasOwnProperty()` instead.)
 **Note**: LHS i.e. propname coerces into a string, RHS should be an object.
 
@@ -174,6 +176,12 @@ console.log(Array.prototype.map in arr);// false, Array.prototype.map coerces to
 
 
 `Symbol.iterator` symbol specifies the default iterator for an object. Used by `for...of`.
+
+
+If you pass non string as a `prop`, it gets co-erced to string e.g.
+`['foo'] in obj` -> same as `'foo' in obj` 
+
+because`['foo'].toString()` gets converted to `'foo'`
 
 ### instanceof operator
 
@@ -1211,6 +1219,12 @@ let and const declarations define variables that are scoped to the running execu
 but may not be accessed in any way until the variable’s LexicalBinding is evaluated.
 
 
+### ToPropertyKey 
+
+Used by key/prop checkers e.g. `in` operator.
+operation coerces non-symbols into strings.
+https://tc39.es/ecma262/multipage/abstract-operations.html#sec-topropertykey
+
 ### Reference specification type
 
 A Reference is a resolved name or property binding
@@ -1451,7 +1465,7 @@ function f() {
 `Comma operator` can be used to **chain expressions, within a parantheses**:
 ```js
 var x = ("A", "b");
-console.log(x);
+console.log(x);// b
 
 // another example
 console.log(("a", "b")); // b

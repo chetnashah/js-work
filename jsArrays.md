@@ -157,6 +157,33 @@ console.log(alphaNumeric);
 be copied in case of object spread `{...arr}`. 
 
 
+### `sort` is in place, return value is the same array
+
+Returns The reference to the original array, now sorted. 
+**Note that the array is sorted in place, and no copy is made.**
+
+**Note** - **default `sort` is  not numerical, but lexicographical**, even if all array elements are numbers.
+e.g.
+```js
+const a = [999, 1111, 111, 2, 0] 
+const b = a.sort()
+
+console.log(a)// [0,111,1111,2,999]
+console.log(b)// [0,111,1111,2,999]
+```
+
+In order to do numerical sort, you must pass a comparator as an argument to sort:
+e.g.
+```js
+const numbers = [4, 2, 5, 1, 3];
+numbers.sort(function(a, b) {
+  return a - b;
+});
+console.log(numbers);
+
+// [1, 2, 3, 4, 5]
+```
+
 ### Holes
 
 An Array is sparse if the range of indices has holes in it. That is, some indices are missing.
@@ -250,3 +277,11 @@ The function is called with the following arguments:
 `initialValue` Optional
 A value to which previousValue is initialized the first time the callback is called. If initialValue is specified, that also causes currentValue to be initialized to the first value in the array. If initialValue is not specified, previousValue is initialized to the first value in the array, and currentValue is initialized to the second value in the array.
 
+### Array to String co-ercion
+
+String co-ercion for arrays is simply comma separated items of array all in one string
+e.g.
+```js
+[1,"hey"].toString() === "1,hey" // true
+["hey"].toString() === "hey" // single element to string is same as the element as string
+```

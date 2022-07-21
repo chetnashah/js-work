@@ -35,6 +35,29 @@ for (var i = 0; i < 3; i++) {
 }
 ```
 
+### What would be answer for following?
+
+```js
+let num
+
+for (let i = 0; i < 5; i++) {
+  num = i
+  setTimeout(() => {
+    console.log(num)
+  }, 100)
+}
+
+//Ans: because num binding is a long lived reference, and not per loop variable binding
+/*
+4
+4
+4
+4
+4
+*/
+```
+
+
 ### NaN is not equal to itself
 
 ```js
@@ -132,4 +155,181 @@ const ll = {
     abc: 12
 };
 console.log(JSON.stringify(ll));// {"abc": 12}
+```
+
+
+## Associative `+` prefix (acts as parseInt)
+
+Give output for following:
+```js
+console.log(1 + 1) // 2
+console.log(1 + + 1) // 2
+console.log(1 + + 1 + 1) // 3
+console.log(1 + + 1 + + 1) // 3
+console.log(1 + + + 1) // 2
+
+console.log(1 + + '1' + + '1')   // 1 + (+'1') + (+'1') = 3
+console.log('1' + + '1' + + '1') // '1' + (+'1') + (+'1') = 111
+console.log('a' + + 'b')         // a + (+'b') = aNaN
+console.log('a' + + 'b' + 'c')   // a + (+'b') + ('c') = aNaNc
+console.log('a' + + 'b' + + 'c') // 'a' + NaN + NaN = aNaNNaN
+```
+
+## Output for followwing:
+
+```js
+var a = 1;
+(function() {
+    debugger;
+    console.log(a + this.a);
+  var a = '2'
+  console.log(a + this.a);
+})();
+
+var name = 1;
+(function() {
+    debugger;
+  console.log(name + this.name);
+  var name = '2'
+  console.log(name + this.name);
+})();
+```
+
+NaN - undefined + 1
+21
+"undefined1" - Its because `window/globalThis.name` will always be converted to a string.
+21
+
+
+###
+
+```js
+function* gen() {
+  yield 2 * (yield 100)
+}
+
+const generator = gen()
+console.log(generator.next().value)// first yield value comes from gen fn
+console.log(generator.next(1).value)// replace with 1 at yield site
+console.log(generator.next(1).value)// 
+
+// 100
+// 2
+// undefined
+```
+
+### Multiple declaration/assignment with same name
+
+```js
+function foo(){ console.log(1) }
+var foo = 2
+function foo(){ console.log(3) }
+foo()
+// TypeError: foo is not a function
+```
+Order of Precedence: variable Assigment > function declaration > variable declaration
+
+
+
+## Use of comma operator
+
+```js
+var obj = {
+  a: "BFE",
+  b: "dev",
+  func: (function foo(){ return this.a; }, function bar(){ return this.b; })
+}
+
+console.log(obj.func())
+```
+
+Refer Comma operator in [language notes](languageNotes.md)
+
+## in operator 
+
+```js
+const obj = {
+  foo: 'bar'
+}
+
+console.log('foo' in obj)    // true - this is obvious
+console.log(['foo'] in obj)  // Array to string co-ercion as per spec: ['foo'].toString() === "foo"
+```
+
+### parseInt weirdness
+
+```js
+console.log(parseInt(0.00001))  // 0
+console.log(parseInt(0.000001)) // 0
+console.log(parseInt(0.0000001))// 1
+```
+
+### Order of printing
+
+```js
+
+console.log(1)
+
+document.body.addEventListener('click', () => {
+  console.log(2)
+})
+
+Promise.resolve().then(() => { // micro task queue
+  console.log(3)
+})
+
+setTimeout(() => { // macro task queue
+  console.log(4)
+}, 0)
+
+console.log(5)
+
+document.body.click() // click invocation is sqynchronous
+
+console.log(6)
+```
+
+### post message asynchrony
+
+```js
+console.log(1)
+
+window.onmessage = () => {
+  console.log(2)
+}
+
+Promise.resolve().then(() => {// microtask queue
+  console.log(3)
+})
+
+setTimeout(() => { // macrotask
+  console.log(4)
+}, 0)
+
+console.log(5)
+
+window.postMessage('')// after microtasks, before macrotasks
+
+console.log(6)
+```
+
+## empty elements and iteration
+
+```js
+const arr = [1]
+arr[5] = 6
+
+// forEach
+arr.forEach(i => console.log(i)) // ignores empty
+
+// map
+console.log(arr.map(i => i * 2))// same size as original with empty
+
+// for ... of
+for (const i of arr) {// iteration for all, empty treated as undefined
+  console.log(i)
+}
+
+// spread
+console.log([...arr])// empty treated as undefined, same size as original
 ```

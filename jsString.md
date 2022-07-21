@@ -87,3 +87,16 @@ Distinctions of slice():
     If start is negative: sets char from the end of string, exactly like substr() in Firefox. This behavior is observed in both Firefox and IE.
     If stop is negative: sets stop to: string.length – Math.abs(stop) (original value), except bounded at 0 (thus, Math.max(0, string.length + stop)) as covered in the ECMA specification.
 
+## String.raw
+
+For raw strings
+```js
+String.raw`Hi \${name}!`;
+// 'Hi \\${name}!', the dollar sign is escaped; there's no interpolation.
+
+// Normally you would not call String.raw() as a function,
+// but to simulate `foo${2 + 3}bar${'Java' + 'Script'}baz` you can do:
+String.raw({
+  raw: ['foo', 'bar', 'baz']
+}, 2 + 3, 'Java' + 'Script'); // 'foo5barJavaScriptbaz'
+```

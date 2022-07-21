@@ -49,3 +49,66 @@ This can be seen with the code `(function () {}).constructor === Function`, whic
 https://stackoverflow.com/questions/23622695/why-in-javascript-both-object-instanceof-function-and-function-instanceof-obj
 
 ![Functions and Objects](img/FunctionsAndObjects.png)
+
+
+## function declarations scoping
+
+Function declarations (**in strict mode**)
+
+* are **block-scoped**, like `let`, (but in non-strict mode they hoist to function scope).
+* create properties in the global object (while in global scope), like `var`.
+* **are hoisted to top of block**: independently of where a function declaration is mentioned in its scope, it is always created at the beginning of the scope.
+```js
+{ // Enter a new scope
+
+    console.log(foo()); // OK, due to hoisting
+    function foo() {
+        return 'hello';
+    }
+}
+```
+
+Beware of conditional function declarations: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function#conditionally_created_functions
+
+
+In strict mode:
+```js
+"use strict"; if (true) {
+  function foo() {
+    console.log('BFE')
+  }
+}
+if (false) {
+  function bar() {
+    console.log('dev')
+  }
+}
+
+foo() // foo is not defined
+bar()
+```
+
+## Class declarations vs function declarations
+
+Class declarations…
+
+* are block-scoped.
+* don’t create properties on the global object.
+* **are not hoisted.**
+
+The rationale for this behavior is that the values of their extends clauses are defined via expressions and those expressions have to be executed at the appropriate times.
+
+```js
+{ // Enter a new scope
+
+    const identity = x => x;
+
+    // Here we are in the temporal dead zone of `MyClass`
+    const inst = new MyClass(); // ReferenceError
+
+    // Note the expression in the `extends` clause
+    class MyClass extends identity(Object) {
+    }
+}
+```
+
