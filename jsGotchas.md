@@ -69,6 +69,7 @@ typeof NaN // "number"
 
 
 
+
 ### `isNaN()` vs `Number.isNaN()`
 
 `isNaN` tries to convert passed-in value to number and returns true/false based on whether it was successfull by using `ToNumber`.
@@ -141,6 +142,12 @@ function isValidNumber(n){
 }
 ```
 
+### `undefined` is stringified as `null` in JSON.stringify
+
+```js
+JSON.stringify([1,2,undefined,3])
+// "[1,2,null,3]"
+```
 
 ### `in` operator vs `hasOwnProperty`
 
@@ -332,4 +339,150 @@ for (const i of arr) {// iteration for all, empty treated as undefined
 
 // spread
 console.log([...arr])// empty treated as undefined, same size as original
+```
+
+
+## This practice 1
+
+```js
+const obj = {
+  a: 1,
+  b: function() {
+    console.log(this.a)
+  },
+  c() {
+    console.log(this.a)
+  },
+  d: () => {
+    console.log(this.a)
+  },
+  e: (function() {
+    return () => {
+      console.log(this.a);
+    }
+  })(),
+  f: function() {
+    return () => {
+      console.log(this.a);
+    }
+  }
+}
+
+console.log(obj.a);
+obj.b()
+;(obj.b)()
+const b = obj.b
+b()
+obj.b.apply({a: 2})
+obj.c()
+obj.d()
+;(obj.d)()
+obj.d.apply({a:2})
+obj.e()
+;(obj.e)()
+obj.e.call({a:2})
+obj.f()()
+;(obj.f())()
+obj.f().call({a:2})
+```
+
+### This 2
+
+```js
+const obj = {
+  a: 1,
+  b() {
+    return this.a
+  }
+}
+console.log(obj.b()) // 1
+console.log((true ? obj.b : a)()) // undefined , ternary operator returns reference to function, no context
+console.log((true, obj.b)()) // undefined - comma operator returns reference to function, no context 
+console.log((3, obj['b'])()) // undefined - comma operator returns reference to function, no context
+console.log((obj.b)())//  1, (fn) does nothing
+console.log((obj.c = obj.b)()) // undefined - assignment operator returns reference to function,no context
+```
+
+## This 3
+
+```js
+var bar = 1
+
+function foo() {
+  return this.bar++
+}
+
+const a = {
+  bar: 10,
+  foo1: foo,
+  foo2: function() {
+    return foo()
+  },
+} 
+
+
+console.log(a.foo1.call())// 1: when call has empty thisArg, this will be global obj
+console.log(a.foo1())// 10: this is context obj a, which has 10
+console.log(a.foo2.call())// empty thisArg -> global obj is this
+console.log(a.foo2());// foo() invoked without context so global obj is context
+```
+
+### Promise gotcha
+
+```js
+// This is a JavaScript Quiz from BFE.dev
+
+console.log(1)
+
+setTimeout(() => {
+  console.log(2)
+}, 10)
+
+setTimeout(() => {
+  console.log(3)
+}, 0);
+
+new Promise((_, reject) => { // promise executor always executes synchronously
+  console.log(4)
+  reject(5)
+  console.log(6)
+}).then(() => console.log(7))
+.catch(() => console.log(8))
+.then(() => console.log(9))
+.catch(() => console.log(10))
+.then(() => console.log(11))
+.then(console.log)
+.finally(() => console.log(12))
+
+console.log(13) 
+```
+
+### Prototype
+
+```js
+function Foo() { }
+Foo.prototype.bar = 1
+const a = new Foo()
+console.log(a.bar)
+
+Foo.prototype.bar = 2
+const b = new Foo()// b has protoLink to the Foo.prototype
+// think of it as equivalent to Object.create(Foo.prototype)
+console.log(a.bar)
+console.log(b.bar)
+
+Foo.prototype = {bar: 3}
+const c = new Foo()// only c has protolink to this new Foo.prototype object
+console.log(a.bar)
+console.log(b.bar)// 
+console.log(c.bar)
+```
+Ans:
+```
+1
+2
+2
+2
+2
+3
 ```

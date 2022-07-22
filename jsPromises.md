@@ -50,6 +50,42 @@ p3.then(function(){
 });
 ```
 
+### Promise constructor executor semantics
+
+**Always executes synchronously**
+
+About the executor, it's important to understand the following:
+
+1. The executor is called automatically and immediately (by new Promise). (https://javascript.info/promise-basics)
+2. The executor return value is ignored.
+3. If an error is thrown in the executor, the promise is rejected.
+
+#### Dont use async fn as an executor
+
+https://eslint.org/docs/latest/rules/no-async-promise-executor
+
+If an async executor function throws an error, the error will be lost and won’t cause the newly-constructed Promise to reject. This could make it difficult to debug and handle some errors.
+
+
+### If you pass a non-function in then method, it is replaced by identity function
+
+If it is not a function, it is internally replaced with an identity function (x => x) which simply passes the fulfillment value forward.
+
+```js
+Promise.resolve(1)
+.then(() => 2)
+.then(3) // not a function, replaced by identity
+.then((value) => value * 3)
+.then(Promise.resolve(4))// this is not a function, replaced by identity
+.then(console.log)
+```
+<details>
+  <summary>Click to expand!</summary>
+  
+  Ans: 6, because -> 2 -> 2*3 -> log
+</details>
+
+
 ### Promise.resolve method
 
 The `Promise.resolve(value)` method returns a Promise object that is resolved with the given value. 

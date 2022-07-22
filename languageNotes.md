@@ -378,7 +378,7 @@ console.log(add(9)(10))       // function that takes one argument and adds 19 to
 console.log(add(9)(10)(11))   // 19 + 11 = 30
 ```
 
-* Arrow functions always using enclosing context as "this", also if you call arrow function using `fn.call(thisArg, args)` or `fn.apply(thisArg, args)`, then thisArg is simply ignored.
+* Arrow functions always using enclosing context as "this", also **if you call arrow function using `fn.call(thisArg, args)` or `fn.apply(thisArg, args)`, then thisArg is simply ignored.**
 
 * Arrow function do not have their own arguments object.
 
