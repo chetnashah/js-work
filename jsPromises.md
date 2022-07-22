@@ -56,7 +56,7 @@ p3.then(function(){
 
 About the executor, it's important to understand the following:
 
-1. The executor is called automatically and immediately (by new Promise). (https://javascript.info/promise-basics)
+1. The executor is called automatically and immediately (by new Promise). (https://javascript.info/promise-basics) https://stackoverflow.com/questions/42118900/when-is-the-body-of-a-promise-executed#comment116510387_42118995
 2. The executor return value is ignored.
 3. If an error is thrown in the executor, the promise is rejected.
 
@@ -90,14 +90,21 @@ Promise.resolve(1)
 
 The `Promise.resolve(value)` method returns a Promise object that is resolved with the given value. 
 
-If the value is a promise, then it is unwrapped so that the resulting promise adopts the state of the promise passed in as value. This is useful for converting promises created by other libraries. Suppose you call a function that might return a value or a promise, then you can use Promise.resolve on it to return a promise that holds eventual value.
+The Promise.resolve() method "resolves" a given value to a Promise. **If the value is a promise, that promise is returned;** if the value is a thenable, Promise.resolve() will call the then() method with two callbacks it prepared; otherwise the returned promise will be fulfilled with the value.
+
+This is useful for converting promises created by other libraries. Suppose you call a function that might return a value or a promise, then you can use `Promise.resolve` on it to return a promise that holds eventual value.
 
 ``` js
-var original = Promise.resolve(true);
-var cast = Promise.resolve(original);
-cast.then(function(v) {
-  console.log(v); // true
+const original = Promise.resolve(33);
+const cast = Promise.resolve(original);
+cast.then((value) => {
+  console.log('value: ' + value);
 });
+console.log('original === cast ? ' + (original === cast));// same reference of promise
+
+// logs, in order:
+// original === cast ? true
+// value: 33
 ```
 
 Promise.resolve is a static method on Promise.
@@ -392,3 +399,8 @@ async function throws.
 
 and every single thing you await will ordinarily be a promise.
 
+## finally
+
+A finally callback will not receive any argument. This use case is for precisely when you do not care about the rejection reason, or the fulfillment value, and so there's no need to provide it.
+
+`finally` also returns a promise, so you can add a `then` after finally.

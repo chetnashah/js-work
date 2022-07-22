@@ -486,3 +486,144 @@ Ans:
 2
 3
 ```
+
+### Arrow functions and this
+
+```js
+// This is a JavaScript Quiz from BFE.dev
+
+const obj = {
+  dev: 'bfe',
+  a: function() {
+    return this.dev
+  },
+  b() {
+    return this.dev
+  },
+  c: () => {
+    return this.dev
+  },
+  d: function() {
+    return (() => {
+      return this.dev
+    })()
+  },
+  e: function() {
+    return this.b()
+  },
+  f: function() {
+    return this.b
+  },
+  g: function() {
+    return this.c()
+  },
+  h: function() {
+    return this.c
+  },
+  i: function() {
+    return () => {
+      return this.dev
+    }
+  }
+}
+
+console.log(obj.a())
+console.log(obj.b())
+console.log(obj.c())
+console.log(obj.d())
+console.log(obj.e())
+console.log(obj.f()())
+console.log(obj.g())
+console.log(obj.h()())
+console.log(obj.i()())
+```
+
+### Promises and finally
+
+```js
+Promise.resolve(1)
+.finally((data) => {
+    debugger;
+  console.log(data)
+  return Promise.reject('error')
+})
+.catch((error) => {
+    debugger;
+  console.log(error)
+  throw 'error2'
+})
+.finally((data) => {
+    debugger;
+  console.log(data)
+  return Promise.resolve(2).then(console.log)
+})
+.then(console.log)
+.catch(console.log)
+```
+
+## Promises and setTimeout
+
+```js
+// This is a JavaScript Quiz from BFE.dev
+
+console.log(1)
+const promise = new Promise((resolve) => {
+  console.log(2)
+  resolve()
+  console.log(3)
+})
+
+console.log(4)
+
+promise.then(() => {
+  console.log(5)
+}).then(() => {
+  console.log(6)
+})
+
+console.log(7)
+
+setTimeout(() => {
+  console.log(8)
+}, 10)
+
+setTimeout(() => {
+  console.log(9)
+}, 0)
+```
+
+### this based
+
+```js
+const obj = {
+  a: 1,
+  b: this.a + 1,
+  c: () => this.a + 1,
+  d() {
+    return this.a + 1
+  },
+  e() {
+    return (() => this.a + 1)()
+  }
+}
+console.log(obj.b)
+console.log(obj.c())
+console.log(obj.d())
+console.log(obj.e())
+```
+
+
+### Imp about promise resolving
+
+```js
+const p1 = Promise.resolve(1)
+const p2 = new Promise((resolve) => resolve(p1))
+const p3 = Promise.resolve(p1)
+const p4 = p2.then(() => new Promise((resolve) => resolve(p3)))
+const p5 = p4.then(() => p4)
+
+console.log(p1 == p2)
+console.log(p1 == p3)
+console.log(p3 == p4)
+console.log(p4 == p5)
+```
