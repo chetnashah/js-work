@@ -16,6 +16,29 @@ function debounce(wrapFn, delayMs) {
     }
 }
 
+function debounceWithImmediate(callback, delay, immediate = false) {
+    // only call callback after delay ms have passed since the last call to this function
+    let timerId = null;
+    // we will return a higher order function
+    return function(...args) {
+        clearTimeout(timerId);
+        // some execution not-scheduled and immediate true
+        let innerImmediate = timerId == null && immediate;
+
+        if(innerImmediate) {
+        callback.apply(this, args);
+        }
+        timerId = setTimeout(() => {
+        if(!immediate) {
+            callback.apply(this,args);
+        }
+        timerId = null;
+        }, delay);
+
+    }
+}
+    
+
 let dbclick = debounce(() => { console.log('I was clicked!')}, 5000);
 
 dbclick();

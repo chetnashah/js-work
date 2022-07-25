@@ -1,10 +1,13 @@
 
-// bind takes a thisArg and some fixed args and returns a new function with fixed this value and fixed args
-// we can internally use apply/call to do the actual calling!
-Function.prototype.mybind = function bind(thisArg, ...callArgs) {
-    var originalFn = this;// it is originalFn on which bind is called
-
-    return function(){
-        originalFn(callArgs);// use call or apply instead
-    }
-}
+Function.prototype.myBind = function (thisContext, ...args) {
+    let thatFn = this;
+    // return a function that uses given thisContext as well as first few given args applied ahead of time
+    return function(...a) {
+      let s = Symbol();
+      thisContext[s] = thatFn;
+      let ret = thisContext[s](...args,...a);
+      delete thisContext[s];
+      return ret;
+    };
+  };
+  

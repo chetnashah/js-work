@@ -27,6 +27,7 @@ function isEqual(a, b) {
     return flag;
 
 }
+  
 
 let ans = isEqual({1: 'hi'}, {1: 'hi'});
 let ans2 = isEqual(new String('curly'), new String('curly'));
