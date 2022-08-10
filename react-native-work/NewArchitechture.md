@@ -13,6 +13,8 @@ If app uses any of following, then it must migrate:
 3. `UIManager.measure()`
 4. `dispatchViewManagerCommand()`
 
+More details here: https://reactnative.dev/docs/next/new-architecture-library-intro#preparing-your-javascript-codebase-for-the-new-react-native-renderer-fabric
+
 ## All the app dependencies/libraries/third party modules need to support new architechture
 
 ## New architechture sample app
