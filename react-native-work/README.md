@@ -1,3 +1,11 @@
+## State of React & React native evolution
+
+
+State of react 18 and new react architechture
+
+![react and react native](images/react&reactnative.png)
+
+##
 React Native Android:
 
 You should send events from a native module using (.emit):
