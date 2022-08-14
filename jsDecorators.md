@@ -1,4 +1,29 @@
 
+
+## Function declarations cannot be decorated
+
+https://github.com/tc39/proposal-decorators/issues/40#issuecomment-370010647
+
+## Class declarations, class methods, and class properties can be decorated
+
+Decorators are functions called on classes, class elements.
+
+decorators can be applied to the following existing types of values:
+
+* Classes
+* Class fields (public, private, and static)
+* Class methods (public, private, and static)
+* Class accessors (public, private, and static)
+
+## Current proposal semantics
+
+
+## Babel legacy decorators semantics
+
+## Typescript experimental decorators semantics
+
+Decorators use the form `@expression`, where `expression` must evaluate to a function that will be called at runtime with information about the decorated declaration.
+
 ### Property decoration 
 
 Now, before installing the descriptor onto Person.prototype, the engine first invokes the decorator:
