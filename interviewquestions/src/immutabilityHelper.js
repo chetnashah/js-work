@@ -2,24 +2,54 @@
 // https://github.com/kolodny/immutability-helper
 
 /**
- * Where push is dereferenced, array must already exist.
  * 
  * Note target and given shape must match
- * @param {} target 
- * @param {*} op 
- * @returns 
  */
 
 /**
  * The $-prefixed keys are called commands. 
  * The data structure they are "mutating" is called the target.
  * @param {*} target 
- * @param {*} op 
+ * @param {*} spec 
  * @returns 
  */
-function update(target, op) {
-    return target;
+function update(target, spec) {
+    console.log(target);
+    console.log(spec);
+
+    let currTarget = target;
+    let currSpec = spec;
+    let command = getCommand(spec);
+    console.log(command)
+    if(!command) {
+        // recurse
+    } else { // command present
+        switch(command) {
+            case 'push':
+                currTarget = [...currTarget, ...(currSpec['$push'])];
+                break;
+            case 'set':
+                break;
+        }
+    }
+
+    return currTarget;
 }
+
+function getCommand(obj) {
+    if(!obj) {
+        return null;
+    }
+    const allKeys = Object.keys(obj);
+    if(allKeys.includes("$push")) {
+        return 'push';
+    }
+    if(allKeys.includes('$set')) {
+        return 'set';
+    }
+}
+
+
 
 module.exports = {
     update,
