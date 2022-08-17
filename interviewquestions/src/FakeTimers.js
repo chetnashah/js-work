@@ -23,15 +23,31 @@ class Timer {
     }
 }
 
+class Interval {
+    constructor(id, callback, startTime, intervalMs) {
+        this.id = id;
+        this.callback = callback;
+        this.startTime = startTime;
+        this.intervalMs = intervalMs;
+        this.latestIdInTimers = null;
+    }
+}
+
 class FakeTimer {
     constructor() {
         this.timers = {};// saved by id
         this.currentTime = 0;
         this.id = 0;
+
+        // for intervals
+        this.intervals = {};
+        this.intervalId = 0;
     }
     install() {
         this.originalSetTimout = globalThis.setTimeout;
         this.originalClearTimeout = globalThis.clearTimeout;
+        this.originalSetInterval = globalThis.setInterval;
+        this.originalClearInterval = globalThis.clearInterval;
         this.originalDate = globalThis.Date;
 
         globalThis.setTimeout = (cb, delay) => {
@@ -44,6 +60,30 @@ class FakeTimer {
             delete this.timers[id];
         };
 
+        globalThis.setInterval = (cb, delayMs) => {
+            const newIntervalId = this.intervalId++;
+            this.intervals[newIntervalId] = new Interval(newIntervalId, cb, undefined, delayMs);
+            const executor = (handler, delayMs2) => {
+                this.intervals[newIntervalId].latestIdInTimers = setTimeout(() => {
+                    handler();
+                    // only schedule next round if still present in intervals
+                    if(this.intervals[newIntervalId]) {
+                        executor(handler, delayMs2)
+                    }
+                }, delayMs2);
+                // console.log(this.intervals[newIntervalId].latestIdInTimers);
+            }
+            executor(cb, delayMs);
+            return newIntervalId;
+        };
+
+        globalThis.clearInterval = (id) => {
+            const relevantInterval = this.intervals[id];
+            // console.log(relevantInterval)
+            clearTimeout(relevantInterval.latestIdInTimers);
+            delete this.intervals[id];
+        };
+
         globalThis.Date = Object.assign({}, Date, {now: () => this.currentTime});
     }
 
@@ -51,6 +91,10 @@ class FakeTimer {
         globalThis.setTimeout = this.originalSetTimout;
         globalThis.clearTimeout = this.originalClearTimeout;
         globalThis.Date = this.originalDate;
+        globalThis.setInterval = this.originalSetInterval;
+        globalThis.clearInterval = this.originalClearInterval;
+        this.timers = {};
+        this.intervals = {};
         this.currentTime = 0;
     }
 
@@ -64,6 +108,7 @@ class FakeTimer {
             const allKeys = Object.keys(this.timers);
             for(let i=0;i<allKeys.length;i++){
                 const ithTimer = this.timers[allKeys[i]];
+            
                 if(ithTimer.triggerTime < earliestTime) {
                     earliestTime = ithTimer.triggerTime;
                     earliestTimer= ithTimer;
@@ -74,7 +119,6 @@ class FakeTimer {
             delete this.timers[earliestTimer.id];
         }
     }
-
 }
 
 module.exports = {

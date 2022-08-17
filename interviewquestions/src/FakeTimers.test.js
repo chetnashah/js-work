@@ -87,4 +87,28 @@ describe('fake timers test', () => {
         expect(clearTimeout).toBe(originalClearTimeout)
         expect(setTimeout).toBe(originalSetTimeout)
     });
+
+    it('interval tests', () => {
+        const fakeTimer = new FakeTimer()
+        fakeTimer.install()
+
+        const logs = []
+        const log = () => {
+            logs.push(Date.now())
+        }
+
+        let count = 0
+        const id = setInterval(() => {
+            if (count > 1) {
+                clearInterval(id)
+            } else {
+                log()
+            }
+            count += 1
+        }, 100)
+        // log 'A' at every 100, stop at 200
+        fakeTimer.tick()
+        fakeTimer.uninstall()
+        expect(logs).toEqual([100,200]);
+    })
  });
