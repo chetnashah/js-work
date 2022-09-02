@@ -13,7 +13,7 @@
 function set(obj, path, val) {
     let pathProps = path;
     if(!Array.isArray(path)) {
-        // normalize and split props for processing
+        // normalize indexing access i.e. "[","]" and split props for processing
         pathProps = path.replace("[", ".").replace("]", "").split(".");
     }
 
@@ -22,7 +22,7 @@ function set(obj, path, val) {
         const prop = pathProps[i];
         // nextProp is necessary to see if index i.e. number prop is coming up, then curr should replace to use array
         const nextProp = pathProps[i+1];
-        if(!curr.hasOwnProperty(prop)) {
+        if(!curr.hasOwnProperty(prop)) {// create new object at path, if does not already exist
             console.log('curr = ' + curr + ' prop = '+ prop);
             curr[prop] = {};
         }

@@ -32,13 +32,17 @@ function JSONStringify(v) {
 }
 
 function JSONStringifyHelper(v, isInArrayOrObject) {
+    // base
     if(typeof v === "string" || v instanceof String) { // special check for String objects i.e. new String("hi")
         return isInArrayOrObject ? `"${v}"` : v;
     }
     /**
+     *
      *  * undefined, Functions, and Symbols are not valid JSON values.
-     *  If encountered as value in an object, both key-value are ignored, 
+     *  If encountered as value in an object, both key-value are ignored, (guareded check should be made before recursing)
     * but if encountered in array, they are converted to null
+    * 
+    * at top level they returned undefined
      */
     if(v === undefined || typeof v === "symbol" || typeof v === "function") {
         return isInArrayOrObject ? "null" : undefined;
@@ -54,10 +58,16 @@ function JSONStringifyHelper(v, isInArrayOrObject) {
         return v.toString();
     }
 
+    // check for cyclick references
+    if(visited.has(v)) {
+        throw new Error("cyclic object value");
+    }
+
     // typeof v is object: either array or object
     let ans = '';
     if(Array.isArray(v)) {
         ans = ans + '[';
+        visited.add(v);
         v.forEach((k, idx) => {
             let s = JSONStringifyHelper(k, true);
             ans = ans+s + (idx == v.length - 1 ? '' : ',');
@@ -70,18 +80,15 @@ function JSONStringifyHelper(v, isInArrayOrObject) {
         return `"${v.toISOString()}"`;
     }
 
-    if(visited.has(v)) {
-        throw new Error("cyclic object value");
-    }
     if(typeof v === "object") {
         ans = ans + '{';
         visited.add(v);
         const keys = Object.keys(v);
         keys.forEach((k, idx) => {
-            let keyPart = `"${JSONStringifyHelper(k)}"`;
+            let keyPart = JSONStringifyHelper(k, true);// TODO, key part is string coercion, not stringification
             // if value part is one of undefined, symbol or function, skip that key/value
             if(v[k] === undefined || typeof(v[k]) === "symbol" || typeof(v[k]) === "function") {
-                return;
+                return;// skip this k/v in forEach
             }
             let valuePart = JSONStringifyHelper(v[k], true);
             ans = ans + (keyPart+ ":" +valuePart) + (idx === (keys.length - 1) ? '' : ',');

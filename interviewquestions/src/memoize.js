@@ -36,7 +36,7 @@ with one whose instances implement the Map method interface of clear, delete, ge
 
 function memoize(fn, resolver){
 
-    // Map does not have problem of key co-ercion like objects
+    // Map does not have problem of key co-ercion like objects, Map allows objects as keys
     let memo = new Map();
 
     return (...args) =>{

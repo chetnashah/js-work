@@ -75,6 +75,18 @@ describe("all json stringify tests" ,() => {
         }).toThrowError(new Error('cyclic object value'));
     });
 
+    it('cyclic data throws error', () => {
+        /**
+        * Throws a TypeError ("cyclic object value") exception when a circular reference is found.
+        */
+        let a = [1];
+        a.push(a);
+        expect(() => {
+            JSONStringify(a)
+        }).toThrowError(new Error('cyclic object value'));
+    });
+
+
  });
 
 describe('all json parse tests', () => { 
