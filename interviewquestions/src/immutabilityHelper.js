@@ -16,27 +16,27 @@
  * @returns 
  */
 function update(target, spec, parentRef, parentKey) {
-    console.log(target);
-    console.log(spec);
+    // console.log(target);
+    // console.log(spec);
 
     let currTarget = target;
     let currSpec = spec;
     let command = getCommand(spec);
-    console.log(command)
+    // console.log(command)
     if(!command) {
         // recurse
         const allKeys = Object.keys(target);
-        console.log(allKeys);
+        // console.log(allKeys);
         for(let i=0;i<allKeys.length;i++) {// collect data from all keys
             const key = allKeys[i];
-            console.log(key);
+            // console.log(key);
             if(!spec[key]){
                 continue;
             }
-            console.log(key);
+            // console.log(key);
             const updated = update(target[key], spec[key], target, key);// recursively ask to update
 
-            console.log(updated);
+            // console.log(updated);
             if(updated !== target[key]) {// if children were updated, we must fork the tree
                 if(Array.isArray(currTarget)) {
                     const ans = [...currTarget];// not sure of direct pattern?
@@ -56,25 +56,25 @@ function update(target, spec, parentRef, parentKey) {
                 return [...currTarget, ...(currSpec['$push'])];
             }
             case 'set': {
-                console.log(currTarget);
-                console.log(currSpec);
-                console.log(parentRef);
-                console.log(parentKey)
+                // console.log(currTarget);
+                // console.log(currSpec);
+                // console.log(parentRef);
+                // console.log(parentKey)
                 const ans = {...parentRef, [parentKey]: currSpec['$set']};
-                console.log(ans);
+                // console.log(ans);
                 return currSpec['$set'];
             }
             case 'merge': {
                 if(typeof currTarget != "object") {
                     throw new Error('object expected');
                 }
-                console.log(currTarget);
-                console.log(currSpec);
-                console.log(parentRef);
-                console.log(parentKey);
+                // console.log(currTarget);
+                // console.log(currSpec);
+                // console.log(parentRef);
+                // console.log(parentKey);
                 const parentStuff = parentKey ? {...parentRef[parentKey]} : {...currTarget};// no parent means we are at top level so spread toplevel
                 const ans = {...parentStuff, ...(currSpec['$merge'])};
-                console.log(ans);
+                // console.log(ans);
                 return ans;
             }
         }

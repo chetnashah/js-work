@@ -1,5 +1,5 @@
 /**
- * task - a function that takes retturn continuation cb which should
+ * task - a function that takes node style retturn continuation/cb which should
  * be invoked when its work is done.
  * If task gets data, cb will be the last argument
  */
@@ -44,6 +44,7 @@ module.exports = {
                 iterSchedule();
             });
         }
+        // kick off iteration
         iterSchedule();
     },
 
@@ -59,12 +60,13 @@ module.exports = {
         const results = [];
         let i = 0;
         let doneCnt = 0;
+        // invoked when any task is finished, to see if we have finished all tasks
         function updateResults() {
             if(doneCnt === tasks.length) {
                 mainCallback(null, results);
             }
         }
-        // idea is recursive iteration
+        // idea is looped iteration
         for(let i = 0;i<tasks.length;i++) {
             tasks[i]((err, ans) => {
                 results[i] = ans;
@@ -83,13 +85,14 @@ module.exports = {
      */
     waterfall: function(tasks, mainCallback) {
         let i = 0;
-        let ans = [];
+        let ans = [];// holds the values returned from previous tasks
         // idea is recursive iteration
         function iterSchedule() {
             if(i == tasks.length) {
                 mainCallback(null, ...ans);
                 return;
             }
+            // same idea as series, but need to pass extra data to next task
             tasks[i].call(null, ...ans, function(err, ...res){
                 ans = res;
                 i++;

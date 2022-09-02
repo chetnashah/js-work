@@ -1,3 +1,9 @@
+/**
+ * named list of listeners
+ * i.e. each name can have list of listeners
+ * 
+ * remove by name + listener refernce
+ */
 class EventTarget {
     // Write your code here.
     constructor() {
