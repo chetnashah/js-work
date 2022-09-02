@@ -88,6 +88,23 @@ foo() // foo is not defined
 bar()
 ```
 
+## defining function that takes callback convention
+
+If you are defining a function that has to return its control flow via a callback, 
+then it should take in callback as the last argument.
+You can see some example APIs here: https://nodejs.org/api/fs.html#callback-api
+or https://expressjs.com/en/api.html#app.listen
+or https://nodejs.org/api/dns.html#dnsgetservers
+or https://mongoosejs.com/docs/api.html#model_Model-find
+or https://nodejs.org/api/http.html#httprequestoptions-callback
+e.g.
+```js
+function doesSomethingAndReturnViaCb(...args, cb) {// return control flow via cb, should be last argument
+    doSomethingWithArgs(args);
+    cb();// return control flow via cb
+}
+```
+
 ## Class declarations vs function declarations
 
 Class declarations…
