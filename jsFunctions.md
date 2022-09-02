@@ -104,6 +104,8 @@ function doesSomethingAndReturnViaCb(...args, cb) {// return control flow via cb
     cb();// return control flow via cb
 }
 ```
+`Note`: we note that it sometimes does not apply for some builtin functions e.g. `setTimeout` etc.
+
 
 ## Class declarations vs function declarations
 
