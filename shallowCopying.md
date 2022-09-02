@@ -1,4 +1,14 @@
 
+https://developer.mozilla.org/en-US/docs/Glossary/Shallow_copy
+
+In JavaScript, all standard built-in object-copy operations -> create shallow copies rather than deep copies.
+1. `spread` syntax, 
+2. `Array.prototype.concat()`, 
+3. `Array.prototype.slice()`, 
+4. `Array.from()`, 
+5. `Object.assign()`, and 
+6. `Object.create()` 
+
 
 
 ### Spread based shallow copying of objects

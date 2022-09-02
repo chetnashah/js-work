@@ -36,8 +36,8 @@ The `slice()` method returns a `shallow copy` of a portion of an array into a ne
 
 slice does not alter the original array. It returns a shallow copy of elements from the original array. Elements of the original array are copied into the returned array as follows:
 
-For objects, slice copies object references into the new array. Both the original and new array refer to the same object. If an object changes, the changes are visible to both the new and original arrays.
-For strings, numbers and booleans (not String, Number and Boolean objects), slice copies the values into the new array. Changes to the string, number, or boolean in one array do not affect the other array.
+1. For **objects**, *slice copies object references into the new array*. Both the original and new array refer to the same object. If an object changes, the changes are visible to both the new and original arrays.
+2. For `strings`, `numbers` and `booleans` (not String, Number and Boolean objects), **slice copies the values into the new array. Changes to the string, number, or boolean in one array do not affect the other array**.
 
 ```js
 arr.slice([begin[, end]])  // note begin, end are both optional
