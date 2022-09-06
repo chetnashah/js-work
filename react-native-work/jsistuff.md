@@ -1,5 +1,7 @@
 ### JNI stuff
 
+`host` means hosting language i.e. `cpp`.
+
 Managed by using utility library `fbjni` - check github (https://github.com/facebookincubator/fbjni), 
 has some handy methods like `makeNativeMethod` etc.
 
