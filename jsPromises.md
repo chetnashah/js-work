@@ -9,6 +9,9 @@ A promises has three mutually exclusive states:
 2. rejected, if `promise.then(undefined, r)` will call r as soon as possible.
 3. pending is neither fullfilled nor rejected.
 
+A promise's state is reflected in its `[[PromiseState]]` internal slot.
+
+
 ### Promise Fates
 A promise has two mutually exclusive fateS:
 1. resolved: A promise is resolved if trying to resolve or reject it has no effect. Means it is locked in to either follow another promise or has been fullfilled or rejected.

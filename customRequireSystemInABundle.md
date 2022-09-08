@@ -1,3 +1,8 @@
+
+
+## Implementing/emulating your own require system in a bundle like setup
+
+```js
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -63,10 +68,10 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);// 0 is first module's id
 /******/ })
 /************************************************************************/
-/******/ ([
+/******/ ([// list of modules to run at startup/bootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 // source root goes here
@@ -78,3 +83,4 @@ console.log(' Hi world');
 
 /***/ })
 /******/ ]);
+```
