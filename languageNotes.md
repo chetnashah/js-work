@@ -1371,6 +1371,7 @@ Every time we use the `{}` object literal, we create a brand new object value
 
 Despite `Object` in the method name, `Object.is` is not specific to objects. 
 It can compare any two values, whether they are objects or not!
+The extra functionailty on top of `===` is that it takes care of `NaN` and neg/pos zeros.
 
 `NaN === NaN` is `false`, although they are the same value.
 `-0 === 0` and `0 === -0` are true, although they are different values.

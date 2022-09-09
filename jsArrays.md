@@ -156,8 +156,11 @@ console.log(array1);
 ### shift
 
 The `arr.shift()` method removes the first element from an array and returns that removed element. This method changes the length of the array. 
+
+Think `shift left`, i.e. remove elements from left/front.
+
 Mutates the array.
-Destructively removes first element
+Destructively removes first element.
 
 Returns: The removed element from the array; undefined if the array is empty.
 ```js
