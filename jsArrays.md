@@ -51,6 +51,21 @@ If `end` is greater than the length of the sequence, slice extracts through to t
 
 `Retruns:` new array containing the slice
 
+
+### map
+
+signaturE:
+```js
+map(function(element, index, array) { /* … */ }, thisArg)
+```
+
+returns new array after mapping each element.
+
+It is **not called for missing elements of the array**; that is:
+
+* indexes that have never been set;
+* indexes which have been deleted.
+
 ### find
 
 Returns the `first value` that passes the predicate test.
@@ -70,6 +85,42 @@ arr.find(callback(element[, index[, array]])[, thisArg])
 ### push
 
 mutates array in place by adding element at the end
+
+### flat (upto a level if specified)
+
+The `flat()` method creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
+
+```js
+const arr1 = [0, 1, 2, [3, 4]];
+
+console.log(arr1.flat());
+// expected output: [0, 1, 2, 3, 4]
+
+const arr2 = [0, 1, 2, [[[3, 4]]]];
+
+console.log(arr2.flat(2));
+// expected output: [0, 1, 2, [3, 4]]
+```
+
+### flatMap
+
+The `flatMap()` method returns a **new array** formed by applying a given callback function to each element of the array, and then `flattening the result by one level`. It is identical to a `map()` followed by a `flat()` of `depth 1` **(arr.map(...args).flat())**, but slightly more efficient than calling those two methods separately.
+
+
+Signature
+```js
+flatMap(function(currentValue, index, array) { /* … */ }, thisArg)
+```
+
+Example:
+```js
+const arr1 = [1, 2, [3], [4, 5], 6, []];
+
+const flattened = arr1.flatMap(num => num);
+
+console.log(flattened);
+// expected output: Array [1, 2, 3, 4, 5, 6]
+```
 
 ### splice
 
@@ -233,6 +284,11 @@ nothing to remember, better test in console
 
 ## ForEach
 
+For Each signature:
+```js
+forEach((element, index, array) => { /* … */ }, thisArg);
+```
+
 There is no way to stop or break a `forEach()` loop other than by throwing an exception. If you need such behavior, the `forEach()` method is the wrong tool.
 
 Array methods: `every()`, `some()`, `find()`, and `findIndex()` test the array elements with a predicate returning a truthy value to determine if further iteration is required.
@@ -241,9 +297,18 @@ Array methods: `every()`, `some()`, `find()`, and `findIndex()` test the array e
 
 **forEach() does not make a copy of the array before iterating.**
 
+## reverse
+
+`arr.reverse()` does not return anything and reverses in place.
+
 ## Reduce
 
 The `reduce()` method itself does not mutate the array it is used on. However, it is possible for code inside the callback function to mutate the array.
+
+Reduce full signature:
+```js
+reduce((previousAccValue, currentValue, currentIndex, array) => { /* … */ }, initialValue)
+```
 
 ### Typical behaviors and edge cases
 
