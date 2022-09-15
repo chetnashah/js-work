@@ -104,3 +104,11 @@ Jest will cache the result of a transformation and attempt to invalidate that re
 
 `ts-jest` use case: **While babel-jest by default will transpile TypeScript files, Babel will not verify the types. If you want that you can use ts-jest.**
 
+## How to test a stopwatch?
+
+TODO
+
+## How to test a countdown Timer?
+
+TODO
+
