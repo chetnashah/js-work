@@ -1,0 +1,22 @@
+{
+  "name": "customjestreporting",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      ["<rootDir>/custom-reporter.js", {"banana": "yes", "pineapple": "no"}]
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
