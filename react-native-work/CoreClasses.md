@@ -46,6 +46,8 @@ Holds reference to a `private ReactInstanceManager`
 Also has a protected method `createReactInstanceManager` which is kind or private.
 The access/creation to reactInstanceManager only happens through `getReactInstanceManager`.
 
+**`ReactNativeHost` creates/owns `ReactInstanceManager` via `new`**
+
 ### ReactRootView
 
 Holds a private reference to `private @Nullable ReactInstanceManager mReactInstanceManager;`
@@ -281,7 +283,7 @@ All common methods like `onCreate, onResume, ...` are forwarded to also call `mR
 
 To provide your own `ReactActivityDelegate`, override `createReactActivityDelegate`.
 
-
+**`ReactActivity` owns/creates `ReactActivityDelegate` using `new`**
 
 ### ReactActivityDelegate
 
@@ -557,3 +559,34 @@ via comman global variable: `__fbBatchedBridge` (See `JSIExecutor.bindBridge` fo
 Main flow of queue for JS -> Native calls:
 `MessageQueue.js -> nativeEnqueueCall` -> `global.nativeFlushQueueImmediate(queue);`
 -> `JSIExecutor.nativeFlushQueueImmediate()` -> `JSIExecutor::callNativeModules` -> `JSToNative: callNativeModules:`
+
+
+## ReactInstanceEventListener
+
+**New Listener Interface for react instance events**.
+
+This class extends as a mitigation for both bridgeless/OSS compatibility.
+this separate class exists to remove dependency on ReactInstanceManager which is bridge specific class.
+
+
+```java
+public interface ReactInstanceEventListener {
+
+  /**
+    Called when react context is initialized (all modules registered!), always called on UI thread
+  */
+  void onReactContextInitialized(ReactContext reactContext);
+}
+```
+
+Where do I register the Listeners?
+ON `ReactInstanceManager` via `reactInstanceManager.addReactInstanceEventListener(reactInstanceEventListener)`
+e.g.
+```java
+reactInstanceManager.addReactInstanceEventListener(new ReactInstanceEventListener(){
+  // called on UI thread
+  public void onReactContextInitialized(ReactContext reactContext) {
+    Log.d(TAG, "ReactContext initialized callback from reactInstanceManager");
+  }
+})
+```
