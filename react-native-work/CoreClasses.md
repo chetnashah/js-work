@@ -52,6 +52,7 @@ The access/creation to reactInstanceManager only happens through `getReactInstan
 
 Holds a private reference to `private @Nullable ReactInstanceManager mReactInstanceManager;`
 
+**Created within `ReactActivityDelegate` via `createRootView()` method via `new`**
 
 Default root view for catalyst apps.
 Has following important public api:
@@ -285,7 +286,9 @@ To provide your own `ReactActivityDelegate`, override `createReactActivityDelega
 
 **`ReactActivity` owns/creates `ReactActivityDelegate` using `new`**
 
-### ReactActivityDelegate
+
+
+### ReactActivityDelegate (it's onCreate loads the app via loadApp)
 
 Holds a reference `private ReactDelegate mReactDelegate`, which is instantiated in `onCreate`. also loads the actual app snowballing the loading process into action...
 ```java
@@ -321,6 +324,8 @@ To provide your own `ReactRootView`, override `createRootView`.
 
 
 ### ReactDelegate
+
+**Created/owned by `ReactActivityDelegate` in its `onCreate` via `new`**
 
 Apart from all the methods being forwarded from `ReactActivityDelegate`.
 One imp public api:
