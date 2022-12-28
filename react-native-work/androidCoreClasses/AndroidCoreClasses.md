@@ -50,6 +50,8 @@ The access/creation to reactInstanceManager only happens through `getReactInstan
 
 **`ReactNativeHost` creates/owns `ReactInstanceManager` via `new/builder`**.
 
+Also - ReactInstanceManager can be created very early-on without any UI. e.g. in `Application.create` when used to initialize flipper etc. via `ReactNativeHost.getInstanceManager()`.
+
 **Many methods in ReactNativeHost can be overriden to customize creation of ReactInstanceManager**.
 
 Things that can be customized/overriden via ReactNativeHost for configuring creation of ReactInstanceManager:
@@ -61,6 +63,10 @@ Things that can be customized/overriden via ReactNativeHost for configuring crea
 6. `getJSMainModuleName()`
 7. `getJSBundleFile()`
 8. `getBundleAssetName()`
+
+PUblic API of ReactNativeHost:
+1. `public void clear()` - Destroy current reference to ReactInstanceManager
+2. `ReactInstanceManager getReactInstanceManager(){}` - get reference to ReactInstancemanager
 
 ### ReactRootView
 
@@ -293,6 +299,16 @@ Attach given {@param reactRoot} to a catalyst instance manager and start JS appl
   }
 ```
 
+
+**Public API for ReactInstanceManager**:
+1. On UI thread - `public void createReactContextInBackground(){}`
+2. On UI thread - `public void recreateReactContextInBackground() {}` - recreateReactContextInBackground should only be called after the initial createReactContextInBackground call.
+3. On UI thread - `public void destroy() {}`
+4. Activity events like = resume/pause/config change/destroy etc.
+5. On UI thread - `attachRootView/detachRootView/clearRoot`.
+6. `LifecycleState getLifecycleState(){}`
+7. 
+
 ### ReactActivity
 
 Holds a reference of a `ReactActivityDelegate`, which is created during constructor,
@@ -300,8 +316,7 @@ All common methods like `onCreate, onResume, ...` are forwarded to also call `mR
 
 To provide your own `ReactActivityDelegate`, override `createReactActivityDelegate`.
 
-**`ReactActivity` owns/creates `ReactActivityDelegate` using `new`**
-
+**`ReactActivity` owns/creates `ReactActivityDelegate` using `new` in its constructor, so before Activity onCreate**
 
 
 ### ReactActivityDelegate (it's onCreate loads the app via loadApp)
@@ -610,4 +625,35 @@ reactInstanceManager.addReactInstanceEventListener(new ReactInstanceEventListene
     Log.d(TAG, "ReactContext initialized callback from reactInstanceManager");
   }
 })
+```
+
+
+## ReactContext creation is snowballed from Activity onCreate
+
+```
+recreateReactContextInBackgroundInner:447, ReactInstanceManager (com.facebook.react)
+createReactContextInBackground:420, ReactInstanceManager (com.facebook.react)
+startReactApplication:507, ReactRootView (com.facebook.react)
+startReactApplication:476, ReactRootView (com.facebook.react)
+loadApp:103, ReactDelegate (com.facebook.react)
+loadApp:111, ReactActivityDelegate (com.facebook.react)
+onCreate:106, ReactActivityDelegate (com.facebook.react)
+onCreate:46, ReactActivity (com.facebook.react)
+onCreate:50, MainActivity (co.example.app)
+performCreate:8051, Activity (android.app)
+performCreate:8031, Activity (android.app)
+callActivityOnCreate:1329, Instrumentation (android.app)
+performLaunchActivity:3608, ActivityThread (android.app)
+handleLaunchActivity:3792, ActivityThread (android.app)
+execute:103, LaunchActivityItem (android.app.servertransaction)
+executeCallbacks:135, TransactionExecutor (android.app.servertransaction)
+execute:95, TransactionExecutor (android.app.servertransaction)
+handleMessage:2210, ActivityThread$H (android.app)
+dispatchMessage:106, Handler (android.os)
+loopOnce:201, Looper (android.os)
+loop:288, Looper (android.os)
+main:7839, ActivityThread (android.app)
+invoke:-1, Method (java.lang.reflect)
+run:548, RuntimeInit$MethodAndArgsCaller (com.android.internal.os)
+main:1003, ZygoteInit (com.android.internal.os)
 ```
