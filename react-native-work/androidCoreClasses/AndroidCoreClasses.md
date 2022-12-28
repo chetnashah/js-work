@@ -3,6 +3,8 @@
 
 Even in order to use with existing apps, use below: (`ReactRootView` + `InstanceManager` + `rootView.startApplication` + `setContentView(rootView)`)
 
+In newest versions, the ReactInstanceManager creation has moved inside `ReactNativeHost` class.
+
 ```java
 // This needs to be done when not using ReactActivity
 public class MyReactActivity extends Activity implements DefaultHardwareBackBtnHandler {
@@ -46,7 +48,19 @@ Holds reference to a `private ReactInstanceManager`
 Also has a protected method `createReactInstanceManager` which is kind or private.
 The access/creation to reactInstanceManager only happens through `getReactInstanceManager`.
 
-**`ReactNativeHost` creates/owns `ReactInstanceManager` via `new`**
+**`ReactNativeHost` creates/owns `ReactInstanceManager` via `new/builder`**.
+
+**Many methods in ReactNativeHost can be overriden to customize creation of ReactInstanceManager**.
+
+Things that can be customized/overriden via ReactNativeHost for configuring creation of ReactInstanceManager:
+1. `getJavascriptExecutorFactory()`
+2. `getUIImplementationProvider()`
+3. `getJSIModulePackage()`
+4. `getRedboxHandler()`
+5. `getDevSupportManagerFactory()`
+6. `getJSMainModuleName()`
+7. `getJSBundleFile()`
+8. `getBundleAssetName()`
 
 ### ReactRootView
 
@@ -242,6 +256,8 @@ An instance of this manager is required to start JS application in `ReactRootVie
 The lifecycle of the instance of  `ReactInstanceManager` should be bound to the activity
 that owns the `ReactRootView` that is used to render react application using this instance
 manager. 
+
+**Creates/owns reference to a `DevSupportManager mDevSupportManager` created via factory** 
 
 Holds a private reference to `private ReactContext mCurrentReactContext`
 
