@@ -61,7 +61,7 @@ Things that can be customized/overriden via ReactNativeHost for configuring crea
 4. `getRedboxHandler()`
 5. `getDevSupportManagerFactory()`
 6. `getJSMainModuleName()`
-7. `getJSBundleFile()`
+7. `String getJSBundleFile()` - codepush uses this hook to return custom JS bundle file.
 8. `getBundleAssetName()`
 
 PUblic API of ReactNativeHost:
@@ -256,6 +256,9 @@ public class ReactApplicationContext extends ReactContext {
 
 ### ReactInstanceManager
 
+Can be created/instantiated much earlier e.g. during Application onCreate via `ReactNativeHost.getInstanceManager()`.
+But public APIs of this class like `createReactContext()` are not called till Activity's onCreate.
+
 Mainly manages `ReactContext` and `CatalystInstance`, and public API is used with `ReactRootView`.
 
 An instance of this manager is required to start JS application in `ReactRootView`.
@@ -301,8 +304,8 @@ Attach given {@param reactRoot} to a catalyst instance manager and start JS appl
 
 
 **Public API for ReactInstanceManager**:
-1. On UI thread - `public void createReactContextInBackground(){}`
-2. On UI thread - `public void recreateReactContextInBackground() {}` - recreateReactContextInBackground should only be called after the initial createReactContextInBackground call.
+1. On UI thread - `public void createReactContextInBackground(){}` - mostly called after onCreate of Activity via delegate.loadApp -> reactRootView.startApplication -> instanceManager.createReactContextInBackgorund.
+2. On UI thread - `public void recreateReactContextInBackground() {}` - recreateReactContextInBackground should only be called after the initial createReactContextInBackground call. 
 3. On UI thread - `public void destroy() {}`
 4. Activity events like = resume/pause/config change/destroy etc.
 5. On UI thread - `attachRootView/detachRootView/clearRoot`.
@@ -656,4 +659,23 @@ main:7839, ActivityThread (android.app)
 invoke:-1, Method (java.lang.reflect)
 run:548, RuntimeInit$MethodAndArgsCaller (com.android.internal.os)
 main:1003, ZygoteInit (com.android.internal.os)
+```
+
+
+## JS bundle loading process via createReactcontext/catalystinstance
+
+`createReactContext()` within ReactInstancemanager, creates/owns CatalystInstance via builder,
+
+1. initialize catalyst instance `catalystInstance = catalystInstanceBuilder.build();`
+2. also calls: `reactContext.initializeWithInstance(catalystInstance); -> spins up msg queue threads`
+3. finally calling `catalystImpl.runJSBundle`.
+
+```
+loadScriptFromAssets:248, CatalystInstanceImpl (com.facebook.react.bridge)
+loadScript:29, JSBundleLoader$1 (com.facebook.react.bridge)
+runJSBundle:277, CatalystInstanceImpl (com.facebook.react.bridge)
+createReactContext:1404, ReactInstanceManager (com.facebook.react)
+access$1200:136, ReactInstanceManager (com.facebook.react)
+run:1108, ReactInstanceManager$5 (com.facebook.react)
+run:920, Thread (java.lang)
 ```
