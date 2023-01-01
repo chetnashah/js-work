@@ -1,3 +1,17 @@
+
+## Architechture
+
+`react-native/ReactCommon/` is for common cpp code,
+and `react-native/React/` is iOS specific code and `react-native/ReactAndroid/` is for android specific code
+
+Also `react-native/React/Base` does not depend on `ReactCommon`.
+
+All imports of style: `<React/XYZ.h>` means `XYZ` is wihtin `react-native/React` i.e IOS side, and even probably part of `react-native/React/Base/`.
+
+`react-native/React` i.e. ios part depends upon `react-native/ReactCommon` i.e. common C++ core.
+
+https://github.com/facebook/react-native
+
 ## State of React & React native evolution
 
 
