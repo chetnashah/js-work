@@ -315,3 +315,66 @@
 
 @end
 ```
+
+
+## RCTCXXBridge = RCTBridge setUp uses `RCTCxxBridge` 
+
+It is part of `RCTBridge+Private.h`
+```objc
+// RCTBridge+Private.h
+@interface RCTCxxBridge : RCTBridge
+
+// TODO(cjhopman): this seems unsafe unless we require that it is only called on the main js queue.
+@property (nonatomic, readonly) void *runtime;
+
+- (instancetype)initWithParentBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
+
+@end
+```
+
+```objc
+// RCTBridge.m
+
+- (Class)bridgeClass
+{
+  return [RCTCxxBridge class];
+}
+
+- (void)setUp {
+  Class bridgeClass = self.bridgeClass;
+
+  self.batchedBridge = [[bridgeClass alloc] initWithParentBridge:self];
+  [self.batchedBridge start];
+}
+```
+
+`RCTCxxBridge` itself is a `RCTBridge` but also would have a different parent bridge referred via `RCTBridge* parentBridge`.
+
+Similarly, `RCTBridge` holds reference to a batched bridge via `RCTBridge* batchedBridge`.
+
+
+## batched/RCTCXXBridge start
+
+* This is where `js NSThread` is started.
+* Also calls into `loadSource` method
+* On a Qos thread executes - `- (void)executeSourceCode:(NSData *)sourceCode sync:(BOOL)sync`
+* Also has `executeApplicationScript` that calls into `reactInstance's` methods, `RCTJavaScriptLoader.loadBundleAtUrl`.
+
+
+
+## RCTJavaScriptLoader
+
+```objc
+@interface RCTJavaScriptLoader : NSObject
+
++ (void)loadBundleAtURL:(NSURL *)scriptURL
+             onProgress:(RCTSourceLoadProgressBlock)onProgress
+             onComplete:(RCTSourceLoadBlock)onComplete;
+@end
+```
+
+First tries `sync load`, then `async load` via `attemptAsynchronousLoadOfBundleAtURL`
+
+
+
+
