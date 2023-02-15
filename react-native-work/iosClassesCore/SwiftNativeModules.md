@@ -42,3 +42,5 @@ RCT_EXTERN_METHOD(addEvent:(NSString *)name location:(NSString *)location date:(
 
 @end
 ```
+
+**Note** - if u see externalized module like this, most likely class definition is in swift.
