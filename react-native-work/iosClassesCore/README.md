@@ -25,3 +25,34 @@ Then finally AppDelegate's `didFinishLaunchingWithOptions` is called from UIAppl
 
 For react-native, we create bridge,rootview, rootviewcontroller in `didFinishLaunchingWithOptions` method of Appdelegate.
 
+## Module Registration
+
+Macro populates code for registration
+```c
+#define RCT_EXPORT_MODULE(js_name)          \
+  RCT_EXTERN void RCTRegisterModule(Class); \
+  +(NSString *)moduleName                   \
+  {                                         \
+    return @ #js_name;                      \
+  }                                         \
+  +(void)load                               \
+  {                                         \
+    RCTRegisterModule(self);                \
+  }
+```
+
+Individual module registration: `RCTBridge RCTRegisterModule(moduleClass)`
+`RCTBridge.RCTModuleClasses` holds all the registered module classes.
+
+All the stuff happens in `RCTCxxBridge start`:
+
+1. jsthread start
+2. registration of non-lazy modules: `RCTCxxBridge start -> _initializeModules -> _registerModuleForClasses`
+3. `make_shared<JSC/hermesExecutor>`
+4. Ensure on JS Thread = Inititalisation of modules: `RCTCxxBridge start -> initializeBridge -> initializeBridgeLocked -> createNativeModules`.
+5. loadSource
+6. async on source load = executeSourceCode
+
+
+
+
