@@ -9,3 +9,4 @@ RCTWebSocket is a wrapper over SocketRocket - https://github.com/facebookincubat
 
 **ReconnectingWebsocket** is a nice abstraction on top of Websocket that keeps reconnecting, till explicitly closed - https://github.com/facebook/react-native/blob/main/Libraries/WebSocket/RCTReconnectingWebSocket.m
 
+Websocket is setup by RCTPackagerConnection  - https://github.com/facebook/react-native/blob/main/React/DevSupport/RCTPackagerConnection.mm
