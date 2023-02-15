@@ -47,12 +47,27 @@ Individual module registration: `RCTBridge RCTRegisterModule(moduleClass)`
 All the stuff happens in `RCTCxxBridge start`:
 
 1. jsthread start
-2. registration of non-lazy modules: `RCTCxxBridge start -> _initializeModules -> _registerModuleForClasses`
+2. registration of non-lazy modules: `RCTCxxBridge start -> _initializeModules -> _registerModuleForClasses -> foreach module-class { [RCTModuleData initWithModuleClass]}`
 3. `make_shared<JSC/hermesExecutor>`
 4. Ensure on JS Thread = Inititalisation of modules: `RCTCxxBridge start -> initializeBridge -> initializeBridgeLocked -> createNativeModules`.
 5. loadSource
 6. async on source load = executeSourceCode
 
 
+## RCTModuleData
 
+Module metadata class for single module instance
+
+Imp methods:
+1. `initWithModuleClass/Instance`
+2. `setUp`
+3. `setupInstanceAndBridge` - 
+4. `_initializeModule`
+5. public getter `- id<RCTBridgeModule> instance`
+
+Imp properies (getters for many of these):
+1. `NSArray<RCTBridgeMethod> methods`
+2. `Dictionary methodsByName`
+3. `id<RCTBridgeModule> instance`
+4. 
 
