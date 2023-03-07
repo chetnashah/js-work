@@ -3,6 +3,34 @@
 Provides packager information to the app.
 Exposes all public API to query packager state/url etc, and can be used from main app i.e. AppDelegate etc.
 
+## It is a singleton
+
+```objc
+// RCTBundleUrlProvider.m
++ (instancetype)sharedSettings
+{
+  static RCTBundleURLProvider *sharedInstance;
+  static dispatch_once_t once_token;
+  dispatch_once(&once_token, ^{
+    sharedInstance = [RCTBundleURLProvider new];
+  });
+  return sharedInstance;
+}
+```
+
+Usage :
+```objc
+// AppDelegate.m
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+#if DEBUG
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];// localhost:8081?options....
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
+}
+```
+
 ## Public API
 
 ```objc
