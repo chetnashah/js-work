@@ -1,4 +1,10 @@
 
+
+## How JS bundle is loaded (Release mode)
+
+1. first preference go to JS bundle file if it it's absolute path is returned from `getJSBUndleFile()`
+2. If above function returns `null`,  then js asset file name that is returned from `getBundleAssetFilename` - and the asset file is located in `android/app/src/main/assets/index.android.bundle` is picked for loading.
+
 ## How react-native-community CLI starts metro server?
 
 This is implementation of `react-native start` command.
