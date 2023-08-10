@@ -56,3 +56,79 @@ setup of this global property happens in `JSIExecutor::initializeRuntime`
 `callNativeModules()`
 
 ### nativeCallSyncHook
+
+
+## setup from core (window, self, process, process.env)
+
+```js
+/**
+ * Sets up global variables for React Native.
+ * You can use this module directly, or just require InitializeCore.
+ */
+if (global.window === undefined) {
+  // $FlowFixMe[cannot-write]
+  global.window = global;
+}
+
+if (global.self === undefined) {
+  // $FlowFixMe[cannot-write]
+  global.self = global;
+}
+
+// Set up process
+global.process = global.process || {};
+global.process.env = global.process.env || {};
+if (!global.process.env.NODE_ENV) {
+  global.process.env.NODE_ENV = __DEV__ ? 'development' : 'production';
+}
+```
+
+## Full list (from eslint-config-react-native-community )
+
+```js
+  globals: {
+    __fbDisableExceptionsManager: false,
+    __DEV__: true,
+    __dirname: false,
+    __fbBatchedBridgeConfig: false,
+    AbortController: false,
+    alert: false,
+    cancelAnimationFrame: false,
+    cancelIdleCallback: false,
+    clearImmediate: true,
+    clearInterval: false,
+    clearTimeout: false,
+    console: false,
+    document: false,
+    ErrorUtils: false,
+    escape: false,
+    Event: false,
+    EventTarget: false,
+    exports: false,
+    fetch: false,
+    FileReader: false,
+    FormData: false,
+    global: false,
+    Headers: false,
+    Intl: false,
+    Map: true,
+    module: false,
+    navigator: false,
+    process: false,
+    Promise: true,
+    requestAnimationFrame: true,
+    requestIdleCallback: true,
+    require: false,
+    Set: true,
+    setImmediate: true,
+    setInterval: false,
+    setTimeout: false,
+    queueMicrotask: true,
+    URL: false,
+    URLSearchParams: false,
+    WebSocket: true,
+    window: false,
+    XMLHttpRequest: false,
+  },
+
+```
