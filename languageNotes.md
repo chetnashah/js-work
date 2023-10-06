@@ -1498,3 +1498,14 @@ console.log(Object.hasOwn(object1, 'undeclaredPropertyValue'));
 // expected output: false
 ```
 
+## List all methods reachable from an object
+
+```js
+let methods = [];
+for(m in obj) {
+  if(typeof m === 'function') {
+    methods.push(m)
+  }
+}
+console.log('methods = ', m);
+```
