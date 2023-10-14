@@ -58,6 +58,9 @@ Object.__proto__ === Function.prototype; // true
 
 Function to determine if passed object is a host object (like `[object Intl]` etc):
 ```js
+// testing : 
+// typeof (""+Intl) // [object Intl]
+// typeof ({}) // [object Object]
 function isHostObj(obj: any) {
     if(obj && typeof obj === 'object' && !Array.isArray(obj) && Object.prototype.toString.call(obj)!== '[object Object]') {
         return true;
