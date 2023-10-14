@@ -49,3 +49,19 @@ The primary purpose of this function is to add an own (direct) property to obj, 
 ```js
 Object.__proto__ === Function.prototype; // true
 ```
+
+## Host vs Native objects
+
+`Host` are global objects are provided by environment for convinence like `Intl`, `Math`, `FormData`. These are serialized as `[object Intl]`, `[object Math]` and `[object FormData]` respectively
+
+`Native` objects are the one created by the programmer using `{}` literal or `Object.define` api. These will usually serialize to `[object Object]`.
+
+Function to determine if passed object is a host object (like `[object Intl]` etc):
+```js
+function isHostObj(obj: any) {
+    if(obj && typeof obj === 'object' && !Array.isArray(obj) && Object.prototype.toString.call(obj)!== '[object Object]') {
+        return true;
+    }
+    return false;
+}
+```
