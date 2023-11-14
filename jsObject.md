@@ -68,3 +68,19 @@ function isHostObj(obj: any) {
     return false;
 }
 ```
+
+## Object.keys vs Object.getOwnPropertyNames
+
+`Object.keys` returns only enumerable property keys.
+
+Where as `Object.getOwnPropertyNames` returns all property keys (enumerable or not).
+
+```js
+var a = {};
+Object.defineProperties(a, {
+    one: {enumerable: true, value: 1},
+    two: {enumerable: false, value: 2},
+});
+Object.keys(a); // ["one"]
+Object.getOwnPropertyNames(a); // ["one", "two"]
+```
