@@ -1,4 +1,32 @@
 
+
+## Statements vs declarations vs Expressions
+
+You can see declarations as "binding identifiers to values", and statements as "carrying out actions". Expressions are something in between: their evaluation result in values.
+
+The fact that var is a statement instead of a declaration is a special case, because it doesn't follow normal lexical scoping rules and may create side effects — in the form of creating global variables, mutating existing var-defined variables, and defining variables that are visible outside of its block (because var-defined variables aren't block-scoped).
+
+### JS Statements
+
+1. **return** 
+2. while
+3. **if-else**
+4. block statement: `{ .... }`
+5. for/for-of/for-in/for await..of.
+6. debugger
+7. **try/catch**
+8. **throw**
+9. switch
+
+### JS declarations
+
+1. class
+2. function/function*/async function/async function*
+3. const/let
+4. export/import
+
+##
+
 #### the "constructor" property
 
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor
