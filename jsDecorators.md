@@ -1,6 +1,8 @@
 
 ## wycats / legacy babel decorators proposal semantics
 
+https://github.com/wycats/javascript-decorators
+
 A decorator is:
 1. an expression - means it returns value (a final descriptor)
 2. Evaluates to a function that will be called at runtime with information about the decorated declaration.
