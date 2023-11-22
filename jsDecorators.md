@@ -1,4 +1,55 @@
 
+## wycats / legacy babel decorators proposal semantics
+
+A decorator is:
+1. an expression - means it returns value (a final descriptor)
+2. Evaluates to a function that will be called at runtime with information about the decorated declaration.
+3. The arguments taken by decorator - `target`, `name` and the `descriptor` it is trying to modify.
+4. Returns the new descriptor that shalle be installed on the target object.
+
+### class decorator transpilation semantics
+
+```js
+@F("color")
+@G
+class Foo {
+}
+```
+is transpiled to
+```js
+var Foo = (function () {
+  class Foo {
+  }
+
+  Foo = F("color")(Foo = G(Foo) || Foo) || Foo;
+  return Foo;
+})();
+```
+
+### Method transpilation semantics
+
+```js
+class Foo {
+  @F("color")
+  @G
+  bar() { }
+}
+```
+is transpiled to
+```js
+var Foo = (function () {
+  class Foo {
+    bar() { }
+  }
+
+  var _temp;
+  _temp = F("color")(Foo.prototype, "bar",
+    _temp = G(Foo.prototype, "bar",
+      _temp = Object.getOwnPropertyDescriptor(Foo.prototype, "bar")) || _temp) || _temp;
+  if (_temp) Object.defineProperty(Foo.prototype, "bar", _temp);
+  return Foo;
+})();
+```
 
 ## Function declarations cannot be decorated
 
