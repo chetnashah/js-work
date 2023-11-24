@@ -1,4 +1,8 @@
 
+## limitations
+
+Decorators can only be used on a class method not on a regular function, so that is one limitation.
+
 ## wycats / legacy babel decorators proposal semantics
 
 https://github.com/wycats/javascript-decorators
