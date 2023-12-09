@@ -1,3 +1,14 @@
+
+## JSI vs turbo modules
+
+
+`JSI Modules` is libs that use the bare JSI C++ API to provide fast and synchronous bindings from JS to native (C++).
+
+`Turbomodules` is an abstraction built ontop of JSI to make it easy for everyone to write native modules that are powered by JSI, without having to touch C++ code.
+
+Turbomodules (the new native module system for React Native) will use JSI under the hood, just like my libraries. It's just a bit abstracted/wrapped to make it easier, since my JSI Modules are a bit complex in code (lots of C++).
+
+
 ### JNI stuff
 
 `host` means hosting language i.e. `cpp`.

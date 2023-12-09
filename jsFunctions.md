@@ -131,3 +131,68 @@ The rationale for this behavior is that the values of their extends clauses are 
 }
 ```
 
+## Constructor functions
+
+**If you do not return anything from constructor functions, then it returns `this` by default.**
+
+```js
+function Emporer() {
+    this.rules = true; // this is returned implicitly
+}
+
+const emp = new Emporer();
+
+console.log(emp.rules); // true
+```
+
+### return values from constructor functions (preferred over this)
+
+* If the constructor returns an object, that object is returned as the value of the whole new expression, and the newly constructed object passed as `this` to the constructor is discarded.**
+
+* If, however, a nonobject is returned from the constructor, the returned value is ignored, and the newly created `this` object is returned.
+
+
+```js
+let puppet = {
+    rules: false
+}
+
+function Emporer() {
+    this.rules = true;
+    return puppet; // this is ignored!
+}
+
+const emp = new Emporer();
+
+console.log(emp.rules); // false
+```
+
+
+## Private variables with functions
+
+```js
+function Ninja() {
+    let feints = 0;// private state
+    this.getFeints = function() {
+        return feints;
+    };
+    this.feint = function() {
+        feints++;
+    };
+}
+
+const ninja1 = new Ninja();
+
+ninja1.feint();
+ninja1.feint();
+console.log(ninja1.getFeints() === 2);
+```
+
+## bind vs call/apply
+
+`.call` and `.apply` impermanently bind the context to target method, 
+and you have to remember to use them every time you invoke the method, and you need to have access to the context/thisArg to do so.
+
+`.bind` permanently binds the context to target method, and returns a new function, without modifying
+the original function.
+
