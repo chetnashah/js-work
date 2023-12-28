@@ -6,3 +6,8 @@ Hermes implements being a target: a debuggable entity that can be discovered via
 
 https://chromedevtools.github.io/devtools-protocol/tot/Runtime/ is implemented by hermes target via following: https://github.com/facebook/hermes/blob/main/API/hermes/inspector/chrome/MessageTypes.h#L208
 
+## Get devtools url at "localhost:8081/json"
+
+This one is done by metro,
+but other tools like stetho also implement this to convince `chrome://inspect` that they are debuggable - https://github.com/facebookarchive/stetho/blob/main/stetho/src/main/java/com/facebook/stetho/inspector/ChromeDiscoveryHandler.java
+
