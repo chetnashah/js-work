@@ -10,6 +10,17 @@ A promises has three mutually exclusive states:
 3. pending is neither fullfilled nor rejected.
 
 A promise's state is reflected in its `[[PromiseState]]` internal slot.
+The value of `[[PromiseState]]` is `pending` initially, and finally either `fullfilled` or `rejected`.
+
+An internal `[[PromiseState]]` property is set to "pending", "fulfilled", or "rejected" to reflect the promise’s state. This property isn’t exposed on promise objects, so you can’t determine which state the promise is in programmatically. But you can take a specific action when a promise changes state by using the `then()` method.
+
+#### Promise fulfilled state
+
+![fulfilled](./img/promisefulfilled.png)
+
+#### Promise pending state then fulfilled state
+
+![pending](./img/promisependingandfulfilled.png)
 
 
 ### Promise Fates
@@ -34,6 +45,42 @@ A promise whose fate is resolved can be in pending state, iff it has bee
 resolved to a promise that is pending.
 
 An unresolved promise is always in pending state. A resolved promise may be in pending, fullfilled or rejected state as mentioned in above three sentences.
+
+
+### what if we add multiple then handlers (on the same promise object)?
+
+```js
+// write a promise that resolves after 5 seconds
+const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve();
+    }, 5000);
+    }
+);
+
+promise.then(() => {
+    console.log('handler 5');
+});
+
+promise.then(() => {
+    console.log('handler 2');
+});
+
+promise.then(() => {
+    console.log('handler 3');
+});
+
+// after 5s - runs handlers in order of registration
+// handler 5
+// handler 2
+// handler 3
+```
+
+### What happens if we add then handlers to a promise that is already settled?
+
+**A fulfillment, rejection, or settlement handler will still be executed even if it is added after the promise is already settled.** 
+
+This allows you to add new fulfillment and rejection handlers at any time and guarantee that they will be called.
 
 ### Thenable Gotchas
 Whenever you return (non-promise value) inside of onFullfilled or onRejected automatically gets converted to promises and passed down the chain.
@@ -160,6 +207,10 @@ Promises are usually run as micro tasks before the start of next tick and the pr
 Due to recursive nature of creation/chaining of promises, 
 Promises can starve your event loop.
 
+### When are then handlers executed?
+
+`then` handlers are executed in following tick of microtask queue, and never in the same tick as the executor.
+
 ### converting callback based API to promise based API
 
 Let's say we have an api that takes callbacks like Node's readFile API, 
@@ -191,6 +242,12 @@ readFile2(fileName) {
     }
 }
 ```
+
+### What happens if I pass a promise to `Promise.resolve` or `Promise.reject`?
+
+**The passed in promise is returned without any modification**. 
+When one is unsure that an object is promise or not, one can use `Promise.resolve` to convert it to a promise first.
+
 
 ### Generator function and generator objects
 
@@ -402,8 +459,29 @@ async function throws.
 
 and every single thing you await will ordinarily be a promise.
 
-## finally
+## finally (also called settlement handlers)
 
-A finally callback will not receive any argument. This use case is for precisely when you do not care about the rejection reason, or the fulfillment value, and so there's no need to provide it.
+A finally callback will not receive any argument. This use case is for precisely when you do not care about the rejection reason, or the fulfillment value, and so there's no need to provide it. When this settlement handler is called, promise is considered settled(whether fulfilled or rejected).
 
 `finally` also returns a promise, so you can add a `then` after finally.
+
+```js
+const appElement = document.getElementById("app"); 
+const promise = fetch("books.json");
+appElement.classList.add("loading");
+promise.then(() => {
+    // handle success
+});
+promise.catch(() => { 
+    // handle failure
+});
+promise.finally(() => { 
+    appElement.classList.remove("loading");
+});
+```
+
+Settlement handlers are useful when you want to know that an operation has completed and you don’t care about the result.
+
+**A good use case for finally is to stop showing loader** - both in success/failure cases, we would like to stop showing loader. Without `finally()`, you would need to remove the "loading" class in both the fulfillment and rejection handlers.
+
+
