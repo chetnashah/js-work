@@ -1,4 +1,55 @@
 
+
+###
+
+#### Indexes
+
+It's also possible to quote the array indices (e.g., `years['2']` instead of `years[2])`, although usually not necessary.
+
+The `2` in `years[2]` is coerced into a string by the JavaScript engine through an implicit `toString` conversion.
+
+
+## Empty slots in arrays
+
+An empty slot is an element in the array that has never been assigned a value. It is not the same as an element set to `undefined`.
+They are also called `holes` in the array, and the array is itself sometime referred as a `sparse array`.
+
+Creating empty slots:
+```js
+const arr = [1,2];
+arr[4] = 5; // arr[2] and arr[3] are empty slots
+```
+
+### Empty slots behavior (with old methods)
+
+older methods (e.g. forEach) treat empty slots differently from indices that contain undefined values.
+
+`concat()`, `copyWithin()`, `every()`, `filter()`, `flat()`, `flatMap()`, `forEach()`, `indexOf()`, `lastIndexOf()`, `reduce()`, `reduceRight()`, `reverse()`, `slice()`, `some()`, `sort()`, and `splice()`. Iteration methods such as forEach don't visit empty slots at all. Other methods, such as concat, copyWithin, etc., preserve empty slots when doing the copying, so in the end the array is still sparse.
+
+### Empty slots behavior with (arr.map)
+
+If the input array contains empty slots (also known as "holes" or "undefined" values), the `Array.map()` method will still return a new array with the same length as the original array, but it will include `undefined` values for the empty slots, **but the callback is not called for empty slots in the array**.
+
+```js
+const arr = [1,2];
+
+arr[4] = 4;
+
+const ans = arr.map((x) => {
+    console.log(x); // 1, 2, 4
+    return x;
+});
+
+console.log(ans); // [ 1, 2, undefined, undefined, 4 ]
+```
+
+
+### Empty slots behavior (with new methods)
+
+do not treat empty slots specially and treat them as if they contain undefined. Methods that conflate empty slots with undefined elements include the following: `entries()`, `fill()`, `find()`, `findIndex()`, `findLast()`, `findLastIndex()`, `includes()`, `join()`, `keys()`, `toLocaleString()`, `toReversed()`, `toSorted()`, `toSpliced()`, `values()`, and `with()`
+
+`for(const i of arrIterator)` - will have `i` as `undefined` for empty slots.
+
 ### Array.isArray
 
 `typeof` is not sufficient because: 
