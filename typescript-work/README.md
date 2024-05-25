@@ -1,9 +1,10 @@
-
-
 ### What is tsconfig.json
 
 The presence of a `tsconfig.json` file in a directory indicates that the directory is the root of a TypeScript project. The tsconfig.json file specifies the root files and the compiler options required to compile the project.
 
+### "require" limitation
+
+**Note** - `require` is not considered part of ts, so any file imported via `require` has type `any`
 
 ### top level fields
 
@@ -60,9 +61,11 @@ MyProj
 │   │   ├── c.ts
 ├── types.d.ts
 ```
+
 Inferred `rootDir` = `core`
 
 If `outdir` was `dist`
+
 ```
 MyProj
 ├── dist
@@ -122,20 +125,18 @@ When you reference a project, new things happen:
 2. If the referenced project produces an outFile, the output file .d.ts file’s declarations will be visible in this project
 3. Build mode (see below) will automatically build the referenced project if needed
 
-
 tsconfig.json
+
 ```json
 {
-    "compilerOptions": {
-        // The usual
-    },
-    "references": [
-        { "path": "../src" }
-    ]
+  "compilerOptions": {
+    // The usual
+  },
+  "references": [{ "path": "../src" }]
 }
 ```
-Another good practice is to have a “solution” tsconfig.json file that simply has references to all of your leaf-node projects and sets files to an empty array (otherwise the solution file will cause double compilation of files). Note that starting with 3.0, it is no longer an error to have an empty files array if you have at least one reference in a tsconfig.json file.
 
+Another good practice is to have a “solution” tsconfig.json file that simply has references to all of your leaf-node projects and sets files to an empty array (otherwise the solution file will cause double compilation of files). Note that starting with 3.0, it is no longer an error to have an empty files array if you have at least one reference in a tsconfig.json file.
 
 ### composite
 
