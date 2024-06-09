@@ -1,0 +1,689 @@
+digraph "ReactAndroid" {
+node [
+  fontsize = "12"
+];
+subgraph clusterLegend {
+  label = "Legend";
+  color = black;
+  edge [ style = invis ];
+  legendNode0 [ label = "Executable", shape = egg ];
+  legendNode1 [ label = "Static Library", shape = octagon ];
+  legendNode2 [ label = "Shared Library", shape = doubleoctagon ];
+  legendNode3 [ label = "Module Library", shape = tripleoctagon ];
+  legendNode4 [ label = "Interface Library", shape = pentagon ];
+  legendNode5 [ label = "Object Library", shape = hexagon ];
+  legendNode6 [ label = "Unknown Library", shape = septagon ];
+  legendNode7 [ label = "Custom Target", shape = box ];
+  legendNode0 -> legendNode1 [ style = solid ];
+  legendNode0 -> legendNode2 [ style = solid ];
+  legendNode0 -> legendNode3;
+  legendNode1 -> legendNode4 [ label = "Interface", style = dashed ];
+  legendNode2 -> legendNode5 [ label = "Private", style = dotted ];
+  legendNode3 -> legendNode6 [ style = solid ];
+  legendNode0 -> legendNode7;
+}
+    "node0" [ label = "boost", shape = octagon ];
+    "node1" [ label = "bridgeless", shape = octagon ];
+    "node2" [ label = "fabricjni", shape = doubleoctagon ];
+    "node3" [ label = "fb", shape = doubleoctagon ];
+    "node4" [ label = "android", shape = septagon ];
+    "node3" -> "node4"  // fb -> android
+    "node5" [ label = "dl", shape = septagon ];
+    "node3" -> "node5"  // fb -> dl
+    "node6" [ label = "log", shape = septagon ];
+    "node3" -> "node6"  // fb -> log
+    "node2" -> "node3"  // fabricjni -> fb
+    "node7" [ label = "fbjni::fbjni\n(fbjni)", shape = doubleoctagon ];
+    "node2" -> "node7"  // fabricjni -> fbjni::fbjni
+    "node8" [ label = "folly_runtime", shape = doubleoctagon ];
+    "node8" -> "node0"  // folly_runtime -> boost
+    "node9" [ label = "double-conversion", shape = octagon ];
+    "node8" -> "node9"  // folly_runtime -> double-conversion
+    "node10" [ label = "fmt", shape = octagon ];
+    "node8" -> "node10"  // folly_runtime -> fmt
+    "node11" [ label = "glog", shape = doubleoctagon ];
+    "node8" -> "node11"  // folly_runtime -> glog
+    "node2" -> "node8"  // fabricjni -> folly_runtime
+    "node2" -> "node11"  // fabricjni -> glog
+    "node12" [ label = "glog_init", shape = doubleoctagon ];
+    "node12" -> "node11"  // glog_init -> glog
+    "node12" -> "node6"  // glog_init -> log
+    "node2" -> "node12"  // fabricjni -> glog_init
+    "node13" [ label = "jsi", shape = doubleoctagon ];
+    "node13" -> "node8"  // jsi -> folly_runtime
+    "node13" -> "node11"  // jsi -> glog
+    "node2" -> "node13"  // fabricjni -> jsi
+    "node14" [ label = "mapbufferjni", shape = doubleoctagon ];
+    "node14" -> "node3"  // mapbufferjni -> fb
+    "node14" -> "node7"  // mapbufferjni -> fbjni::fbjni
+    "node14" -> "node8"  // mapbufferjni -> folly_runtime
+    "node14" -> "node11"  // mapbufferjni -> glog
+    "node14" -> "node12"  // mapbufferjni -> glog_init
+    "node15" [ label = "react_config", shape = doubleoctagon ];
+    "node14" -> "node15"  // mapbufferjni -> react_config
+    "node16" [ label = "react_debug", shape = doubleoctagon ];
+    "node16" -> "node8"  // react_debug -> folly_runtime
+    "node16" -> "node6"  // react_debug -> log
+    "node14" -> "node16"  // mapbufferjni -> react_debug
+    "node17" [ label = "react_render_mapbuffer", shape = doubleoctagon ];
+    "node17" -> "node11"  // react_render_mapbuffer -> glog
+    "node17" -> "node12"  // react_render_mapbuffer -> glog_init
+    "node17" -> "node16"  // react_render_mapbuffer -> react_debug
+    "node14" -> "node17"  // mapbufferjni -> react_render_mapbuffer
+    "node18" [ label = "react_utils", shape = doubleoctagon ];
+    "node18" -> "node11"  // react_utils -> glog
+    "node18" -> "node12"  // react_utils -> glog_init
+    "node18" -> "node16"  // react_utils -> react_debug
+    "node14" -> "node18"  // mapbufferjni -> react_utils
+    "node19" [ label = "yoga", shape = doubleoctagon ];
+    "node19" -> "node4"  // yoga -> android
+    "node19" -> "node3"  // yoga -> fb
+    "node19" -> "node7"  // yoga -> fbjni::fbjni
+    "node19" -> "node6"  // yoga -> log
+    "node20" [ label = "yogacore", shape = octagon ];
+    "node20" -> "node6"  // yogacore -> log
+    "node19" -> "node20"  // yoga -> yogacore
+    "node14" -> "node19"  // mapbufferjni -> yoga
+    "node2" -> "node14"  // fabricjni -> mapbufferjni
+    "node21" [ label = "react_codegen_rncore", shape = doubleoctagon ];
+    "node21" -> "node7"  // react_codegen_rncore -> fbjni::fbjni
+    "node21" -> "node8"  // react_codegen_rncore -> folly_runtime
+    "node21" -> "node11"  // react_codegen_rncore -> glog
+    "node21" -> "node13"  // react_codegen_rncore -> jsi
+    "node21" -> "node16"  // react_codegen_rncore -> react_debug
+    "node22" [ label = "react_nativemodule_core", shape = doubleoctagon ];
+    "node22" -> "node7"  // react_nativemodule_core -> fbjni::fbjni
+    "node22" -> "node8"  // react_nativemodule_core -> folly_runtime
+    "node22" -> "node11"  // react_nativemodule_core -> glog
+    "node22" -> "node13"  // react_nativemodule_core -> jsi
+    "node23" [ label = "react_bridging", shape = octagon ];
+    "node24" [ label = "callinvoker", shape = pentagon ];
+    "node23" -> "node24"  // react_bridging -> callinvoker
+    "node23" -> "node13"  // react_bridging -> jsi
+    "node22" -> "node23"  // react_nativemodule_core -> react_bridging
+    "node22" -> "node16"  // react_nativemodule_core -> react_debug
+    "node25" [ label = "reactnativejni", shape = doubleoctagon ];
+    "node25" -> "node4"  // reactnativejni -> android
+    "node26" [ label = "callinvokerholder", shape = octagon ];
+    "node26" -> "node24"  // callinvokerholder -> callinvoker
+    "node26" -> "node3"  // callinvokerholder -> fb
+    "node26" -> "node7"  // callinvokerholder -> fbjni::fbjni
+    "node27" [ label = "reactperfloggerjni", shape = doubleoctagon ];
+    "node27" -> "node4"  // reactperfloggerjni -> android
+    "node27" -> "node3"  // reactperfloggerjni -> fb
+    "node27" -> "node7"  // reactperfloggerjni -> fbjni::fbjni
+    "node28" [ label = "reactperflogger", shape = octagon ];
+    "node27" -> "node28"  // reactperfloggerjni -> reactperflogger
+    "node26" -> "node27"  // callinvokerholder -> reactperfloggerjni
+    "node29" [ label = "runtimeexecutor", shape = doubleoctagon ];
+    "node29" -> "node13"  // runtimeexecutor -> jsi
+    "node26" -> "node29"  // callinvokerholder -> runtimeexecutor
+    "node25" -> "node26"  // reactnativejni -> callinvokerholder
+    "node25" -> "node3"  // reactnativejni -> fb
+    "node25" -> "node7"  // reactnativejni -> fbjni::fbjni
+    "node25" -> "node8"  // reactnativejni -> folly_runtime
+    "node25" -> "node12"  // reactnativejni -> glog_init
+    "node30" [ label = "logger", shape = doubleoctagon ];
+    "node30" -> "node11"  // logger -> glog
+    "node25" -> "node30"  // reactnativejni -> logger
+    "node31" [ label = "react_render_runtimescheduler", shape = doubleoctagon ];
+    "node31" -> "node24"  // react_render_runtimescheduler -> callinvoker
+    "node31" -> "node13"  // react_render_runtimescheduler -> jsi
+    "node31" -> "node16"  // react_render_runtimescheduler -> react_debug
+    "node32" [ label = "react_render_core", shape = doubleoctagon ];
+    "node32" -> "node8"  // react_render_core -> folly_runtime
+    "node32" -> "node11"  // react_render_core -> glog
+    "node32" -> "node13"  // react_render_core -> jsi
+    "node32" -> "node30"  // react_render_core -> logger
+    "node32" -> "node15"  // react_render_core -> react_config
+    "node32" -> "node16"  // react_render_core -> react_debug
+    "node33" [ label = "react_render_debug", shape = doubleoctagon ];
+    "node33" -> "node8"  // react_render_debug -> folly_runtime
+    "node32" -> "node33"  // react_render_core -> react_render_debug
+    "node34" [ label = "react_render_graphics", shape = doubleoctagon ];
+    "node34" -> "node3"  // react_render_graphics -> fb
+    "node34" -> "node7"  // react_render_graphics -> fbjni::fbjni
+    "node34" -> "node8"  // react_render_graphics -> folly_runtime
+    "node34" -> "node11"  // react_render_graphics -> glog
+    "node34" -> "node16"  // react_render_graphics -> react_debug
+    "node34" -> "node18"  // react_render_graphics -> react_utils
+    "node32" -> "node34"  // react_render_core -> react_render_graphics
+    "node32" -> "node17"  // react_render_core -> react_render_mapbuffer
+    "node32" -> "node18"  // react_render_core -> react_utils
+    "node31" -> "node32"  // react_render_runtimescheduler -> react_render_core
+    "node31" -> "node33"  // react_render_runtimescheduler -> react_render_debug
+    "node31" -> "node29"  // react_render_runtimescheduler -> runtimeexecutor
+    "node25" -> "node31"  // reactnativejni -> react_render_runtimescheduler
+    "node35" [ label = "reactnative", shape = octagon ];
+    "node35" -> "node0"  // reactnative -> boost
+    "node35" -> "node24"  // reactnative -> callinvoker
+    "node35" -> "node8"  // reactnative -> folly_runtime
+    "node35" -> "node11"  // reactnative -> glog
+    "node35" -> "node13"  // reactnative -> jsi
+    "node36" [ label = "jsinspector", shape = doubleoctagon ];
+    "node35" -> "node36"  // reactnative -> jsinspector
+    "node35" -> "node30"  // reactnative -> logger
+    "node35" -> "node16"  // reactnative -> react_debug
+    "node35" -> "node28"  // reactnative -> reactperflogger
+    "node35" -> "node29"  // reactnative -> runtimeexecutor
+    "node25" -> "node35"  // reactnativejni -> reactnative
+    "node25" -> "node29"  // reactnativejni -> runtimeexecutor
+    "node25" -> "node19"  // reactnativejni -> yoga
+    "node22" -> "node25"  // react_nativemodule_core -> reactnativejni
+    "node22" -> "node28"  // react_nativemodule_core -> reactperflogger
+    "node21" -> "node22"  // react_codegen_rncore -> react_nativemodule_core
+    "node21" -> "node32"  // react_codegen_rncore -> react_render_core
+    "node21" -> "node33"  // react_codegen_rncore -> react_render_debug
+    "node21" -> "node34"  // react_codegen_rncore -> react_render_graphics
+    "node37" [ label = "react_render_imagemanager", shape = doubleoctagon ];
+    "node37" -> "node8"  // react_render_imagemanager -> folly_runtime
+    "node37" -> "node16"  // react_render_imagemanager -> react_debug
+    "node37" -> "node32"  // react_render_imagemanager -> react_render_core
+    "node37" -> "node33"  // react_render_imagemanager -> react_render_debug
+    "node37" -> "node34"  // react_render_imagemanager -> react_render_graphics
+    "node38" [ label = "react_render_mounting", shape = doubleoctagon ];
+    "node38" -> "node8"  // react_render_mounting -> folly_runtime
+    "node38" -> "node11"  // react_render_mounting -> glog
+    "node38" -> "node12"  // react_render_mounting -> glog_init
+    "node38" -> "node13"  // react_render_mounting -> jsi
+    "node38" -> "node16"  // react_render_mounting -> react_debug
+    "node38" -> "node32"  // react_render_mounting -> react_render_core
+    "node38" -> "node33"  // react_render_mounting -> react_render_debug
+    "node38" -> "node34"  // react_render_mounting -> react_render_graphics
+    "node39" [ label = "react_render_telemetry", shape = doubleoctagon ];
+    "node39" -> "node8"  // react_render_telemetry -> folly_runtime
+    "node39" -> "node11"  // react_render_telemetry -> glog
+    "node39" -> "node12"  // react_render_telemetry -> glog_init
+    "node39" -> "node16"  // react_render_telemetry -> react_debug
+    "node39" -> "node32"  // react_render_telemetry -> react_render_core
+    "node39" -> "node33"  // react_render_telemetry -> react_render_debug
+    "node39" -> "node18"  // react_render_telemetry -> react_utils
+    "node40" [ label = "rrc_root", shape = doubleoctagon ];
+    "node40" -> "node8"  // rrc_root -> folly_runtime
+    "node40" -> "node11"  // rrc_root -> glog
+    "node40" -> "node12"  // rrc_root -> glog_init
+    "node40" -> "node16"  // rrc_root -> react_debug
+    "node40" -> "node32"  // rrc_root -> react_render_core
+    "node40" -> "node33"  // rrc_root -> react_render_debug
+    "node40" -> "node34"  // rrc_root -> react_render_graphics
+    "node41" [ label = "rrc_view", shape = doubleoctagon ];
+    "node41" -> "node8"  // rrc_view -> folly_runtime
+    "node41" -> "node11"  // rrc_view -> glog
+    "node41" -> "node12"  // rrc_view -> glog_init
+    "node41" -> "node13"  // rrc_view -> jsi
+    "node41" -> "node30"  // rrc_view -> logger
+    "node41" -> "node16"  // rrc_view -> react_debug
+    "node41" -> "node32"  // rrc_view -> react_render_core
+    "node41" -> "node33"  // rrc_view -> react_render_debug
+    "node41" -> "node34"  // rrc_view -> react_render_graphics
+    "node41" -> "node19"  // rrc_view -> yoga
+    "node40" -> "node41"  // rrc_root -> rrc_view
+    "node40" -> "node19"  // rrc_root -> yoga
+    "node39" -> "node40"  // react_render_telemetry -> rrc_root
+    "node39" -> "node41"  // react_render_telemetry -> rrc_view
+    "node39" -> "node19"  // react_render_telemetry -> yoga
+    "node38" -> "node39"  // react_render_mounting -> react_render_telemetry
+    "node38" -> "node18"  // react_render_mounting -> react_utils
+    "node38" -> "node40"  // react_render_mounting -> rrc_root
+    "node38" -> "node41"  // react_render_mounting -> rrc_view
+    "node38" -> "node19"  // react_render_mounting -> yoga
+    "node37" -> "node38"  // react_render_imagemanager -> react_render_mounting
+    "node37" -> "node19"  // react_render_imagemanager -> yoga
+    "node21" -> "node37"  // react_codegen_rncore -> react_render_imagemanager
+    "node42" [ label = "rrc_image", shape = doubleoctagon ];
+    "node42" -> "node8"  // rrc_image -> folly_runtime
+    "node42" -> "node11"  // rrc_image -> glog
+    "node42" -> "node12"  // rrc_image -> glog_init
+    "node42" -> "node13"  // rrc_image -> jsi
+    "node42" -> "node16"  // rrc_image -> react_debug
+    "node42" -> "node32"  // rrc_image -> react_render_core
+    "node42" -> "node33"  // rrc_image -> react_render_debug
+    "node42" -> "node34"  // rrc_image -> react_render_graphics
+    "node42" -> "node37"  // rrc_image -> react_render_imagemanager
+    "node42" -> "node17"  // rrc_image -> react_render_mapbuffer
+    "node42" -> "node18"  // rrc_image -> react_utils
+    "node42" -> "node41"  // rrc_image -> rrc_view
+    "node42" -> "node19"  // rrc_image -> yoga
+    "node21" -> "node42"  // react_codegen_rncore -> rrc_image
+    "node21" -> "node41"  // react_codegen_rncore -> rrc_view
+    "node43" [ label = "turbomodulejsijni", shape = doubleoctagon ];
+    "node43" -> "node26"  // turbomodulejsijni -> callinvokerholder
+    "node43" -> "node3"  // turbomodulejsijni -> fb
+    "node43" -> "node7"  // turbomodulejsijni -> fbjni::fbjni
+    "node43" -> "node13"  // turbomodulejsijni -> jsi
+    "node43" -> "node22"  // turbomodulejsijni -> react_nativemodule_core
+    "node43" -> "node27"  // turbomodulejsijni -> reactperfloggerjni
+    "node21" -> "node43"  // react_codegen_rncore -> turbomodulejsijni
+    "node21" -> "node19"  // react_codegen_rncore -> yoga
+    "node2" -> "node21"  // fabricjni -> react_codegen_rncore
+    "node2" -> "node15"  // fabricjni -> react_config
+    "node2" -> "node16"  // fabricjni -> react_debug
+    "node44" [ label = "react_render_animations", shape = doubleoctagon ];
+    "node44" -> "node8"  // react_render_animations -> folly_runtime
+    "node44" -> "node11"  // react_render_animations -> glog
+    "node44" -> "node12"  // react_render_animations -> glog_init
+    "node44" -> "node13"  // react_render_animations -> jsi
+    "node44" -> "node15"  // react_render_animations -> react_config
+    "node44" -> "node16"  // react_render_animations -> react_debug
+    "node45" [ label = "react_render_componentregistry", shape = doubleoctagon ];
+    "node45" -> "node8"  // react_render_componentregistry -> folly_runtime
+    "node45" -> "node12"  // react_render_componentregistry -> glog_init
+    "node45" -> "node13"  // react_render_componentregistry -> jsi
+    "node45" -> "node16"  // react_render_componentregistry -> react_debug
+    "node45" -> "node32"  // react_render_componentregistry -> react_render_core
+    "node45" -> "node33"  // react_render_componentregistry -> react_render_debug
+    "node45" -> "node18"  // react_render_componentregistry -> react_utils
+    "node44" -> "node45"  // react_render_animations -> react_render_componentregistry
+    "node44" -> "node32"  // react_render_animations -> react_render_core
+    "node44" -> "node33"  // react_render_animations -> react_render_debug
+    "node44" -> "node34"  // react_render_animations -> react_render_graphics
+    "node44" -> "node38"  // react_render_animations -> react_render_mounting
+    "node46" [ label = "react_render_uimanager", shape = doubleoctagon ];
+    "node46" -> "node8"  // react_render_uimanager -> folly_runtime
+    "node46" -> "node11"  // react_render_uimanager -> glog
+    "node46" -> "node13"  // react_render_uimanager -> jsi
+    "node46" -> "node15"  // react_render_uimanager -> react_config
+    "node46" -> "node16"  // react_render_uimanager -> react_debug
+    "node46" -> "node45"  // react_render_uimanager -> react_render_componentregistry
+    "node46" -> "node32"  // react_render_uimanager -> react_render_core
+    "node46" -> "node33"  // react_render_uimanager -> react_render_debug
+    "node46" -> "node34"  // react_render_uimanager -> react_render_graphics
+    "node47" [ label = "react_render_leakchecker", shape = doubleoctagon ];
+    "node47" -> "node11"  // react_render_leakchecker -> glog
+    "node47" -> "node32"  // react_render_leakchecker -> react_render_core
+    "node47" -> "node29"  // react_render_leakchecker -> runtimeexecutor
+    "node46" -> "node47"  // react_render_uimanager -> react_render_leakchecker
+    "node46" -> "node38"  // react_render_uimanager -> react_render_mounting
+    "node46" -> "node31"  // react_render_uimanager -> react_render_runtimescheduler
+    "node46" -> "node35"  // react_render_uimanager -> reactnative
+    "node46" -> "node40"  // react_render_uimanager -> rrc_root
+    "node46" -> "node41"  // react_render_uimanager -> rrc_view
+    "node46" -> "node29"  // react_render_uimanager -> runtimeexecutor
+    "node44" -> "node46"  // react_render_animations -> react_render_uimanager
+    "node44" -> "node41"  // react_render_animations -> rrc_view
+    "node44" -> "node29"  // react_render_animations -> runtimeexecutor
+    "node44" -> "node19"  // react_render_animations -> yoga
+    "node2" -> "node44"  // fabricjni -> react_render_animations
+    "node48" [ label = "react_render_attributedstring", shape = doubleoctagon ];
+    "node48" -> "node8"  // react_render_attributedstring -> folly_runtime
+    "node48" -> "node11"  // react_render_attributedstring -> glog
+    "node48" -> "node12"  // react_render_attributedstring -> glog_init
+    "node48" -> "node16"  // react_render_attributedstring -> react_debug
+    "node48" -> "node32"  // react_render_attributedstring -> react_render_core
+    "node48" -> "node33"  // react_render_attributedstring -> react_render_debug
+    "node48" -> "node34"  // react_render_attributedstring -> react_render_graphics
+    "node48" -> "node17"  // react_render_attributedstring -> react_render_mapbuffer
+    "node48" -> "node18"  // react_render_attributedstring -> react_utils
+    "node48" -> "node41"  // react_render_attributedstring -> rrc_view
+    "node48" -> "node19"  // react_render_attributedstring -> yoga
+    "node2" -> "node48"  // fabricjni -> react_render_attributedstring
+    "node2" -> "node45"  // fabricjni -> react_render_componentregistry
+    "node2" -> "node32"  // fabricjni -> react_render_core
+    "node2" -> "node33"  // fabricjni -> react_render_debug
+    "node2" -> "node34"  // fabricjni -> react_render_graphics
+    "node2" -> "node37"  // fabricjni -> react_render_imagemanager
+    "node2" -> "node17"  // fabricjni -> react_render_mapbuffer
+    "node2" -> "node38"  // fabricjni -> react_render_mounting
+    "node2" -> "node31"  // fabricjni -> react_render_runtimescheduler
+    "node49" [ label = "react_render_scheduler", shape = doubleoctagon ];
+    "node49" -> "node8"  // react_render_scheduler -> folly_runtime
+    "node49" -> "node11"  // react_render_scheduler -> glog
+    "node49" -> "node13"  // react_render_scheduler -> jsi
+    "node49" -> "node15"  // react_render_scheduler -> react_config
+    "node49" -> "node16"  // react_render_scheduler -> react_debug
+    "node49" -> "node45"  // react_render_scheduler -> react_render_componentregistry
+    "node49" -> "node32"  // react_render_scheduler -> react_render_core
+    "node49" -> "node33"  // react_render_scheduler -> react_render_debug
+    "node49" -> "node34"  // react_render_scheduler -> react_render_graphics
+    "node49" -> "node38"  // react_render_scheduler -> react_render_mounting
+    "node49" -> "node31"  // react_render_scheduler -> react_render_runtimescheduler
+    "node50" [ label = "react_render_templateprocessor", shape = doubleoctagon ];
+    "node50" -> "node8"  // react_render_templateprocessor -> folly_runtime
+    "node50" -> "node11"  // react_render_templateprocessor -> glog
+    "node50" -> "node13"  // react_render_templateprocessor -> jsi
+    "node50" -> "node15"  // react_render_templateprocessor -> react_config
+    "node50" -> "node45"  // react_render_templateprocessor -> react_render_componentregistry
+    "node50" -> "node32"  // react_render_templateprocessor -> react_render_core
+    "node50" -> "node33"  // react_render_templateprocessor -> react_render_debug
+    "node50" -> "node46"  // react_render_templateprocessor -> react_render_uimanager
+    "node50" -> "node18"  // react_render_templateprocessor -> react_utils
+    "node49" -> "node50"  // react_render_scheduler -> react_render_templateprocessor
+    "node49" -> "node46"  // react_render_scheduler -> react_render_uimanager
+    "node49" -> "node18"  // react_render_scheduler -> react_utils
+    "node49" -> "node40"  // react_render_scheduler -> rrc_root
+    "node49" -> "node41"  // react_render_scheduler -> rrc_view
+    "node49" -> "node19"  // react_render_scheduler -> yoga
+    "node2" -> "node49"  // fabricjni -> react_render_scheduler
+    "node2" -> "node39"  // fabricjni -> react_render_telemetry
+    "node2" -> "node50"  // fabricjni -> react_render_templateprocessor
+    "node51" [ label = "react_render_textlayoutmanager", shape = doubleoctagon ];
+    "node51" -> "node3"  // react_render_textlayoutmanager -> fb
+    "node51" -> "node7"  // react_render_textlayoutmanager -> fbjni::fbjni
+    "node51" -> "node8"  // react_render_textlayoutmanager -> folly_runtime
+    "node51" -> "node11"  // react_render_textlayoutmanager -> glog
+    "node51" -> "node12"  // react_render_textlayoutmanager -> glog_init
+    "node51" -> "node14"  // react_render_textlayoutmanager -> mapbufferjni
+    "node51" -> "node16"  // react_render_textlayoutmanager -> react_debug
+    "node51" -> "node48"  // react_render_textlayoutmanager -> react_render_attributedstring
+    "node51" -> "node45"  // react_render_textlayoutmanager -> react_render_componentregistry
+    "node51" -> "node32"  // react_render_textlayoutmanager -> react_render_core
+    "node51" -> "node33"  // react_render_textlayoutmanager -> react_render_debug
+    "node51" -> "node34"  // react_render_textlayoutmanager -> react_render_graphics
+    "node51" -> "node17"  // react_render_textlayoutmanager -> react_render_mapbuffer
+    "node51" -> "node38"  // react_render_textlayoutmanager -> react_render_mounting
+    "node51" -> "node39"  // react_render_textlayoutmanager -> react_render_telemetry
+    "node51" -> "node46"  // react_render_textlayoutmanager -> react_render_uimanager
+    "node51" -> "node18"  // react_render_textlayoutmanager -> react_utils
+    "node51" -> "node25"  // react_render_textlayoutmanager -> reactnativejni
+    "node51" -> "node19"  // react_render_textlayoutmanager -> yoga
+    "node2" -> "node51"  // fabricjni -> react_render_textlayoutmanager
+    "node2" -> "node46"  // fabricjni -> react_render_uimanager
+    "node2" -> "node18"  // fabricjni -> react_utils
+    "node2" -> "node25"  // fabricjni -> reactnativejni
+    "node2" -> "node42"  // fabricjni -> rrc_image
+    "node52" [ label = "rrc_modal", shape = octagon ];
+    "node52" -> "node8"  // rrc_modal -> folly_runtime
+    "node52" -> "node11"  // rrc_modal -> glog
+    "node52" -> "node12"  // rrc_modal -> glog_init
+    "node52" -> "node21"  // rrc_modal -> react_codegen_rncore
+    "node52" -> "node45"  // rrc_modal -> react_render_componentregistry
+    "node52" -> "node32"  // rrc_modal -> react_render_core
+    "node52" -> "node33"  // rrc_modal -> react_render_debug
+    "node52" -> "node34"  // rrc_modal -> react_render_graphics
+    "node52" -> "node37"  // rrc_modal -> react_render_imagemanager
+    "node52" -> "node17"  // rrc_modal -> react_render_mapbuffer
+    "node52" -> "node46"  // rrc_modal -> react_render_uimanager
+    "node52" -> "node42"  // rrc_modal -> rrc_image
+    "node52" -> "node41"  // rrc_modal -> rrc_view
+    "node52" -> "node19"  // rrc_modal -> yoga
+    "node2" -> "node52"  // fabricjni -> rrc_modal
+    "node53" [ label = "rrc_progressbar", shape = octagon ];
+    "node53" -> "node7"  // rrc_progressbar -> fbjni::fbjni
+    "node53" -> "node8"  // rrc_progressbar -> folly_runtime
+    "node53" -> "node11"  // rrc_progressbar -> glog
+    "node53" -> "node12"  // rrc_progressbar -> glog_init
+    "node53" -> "node21"  // rrc_progressbar -> react_codegen_rncore
+    "node53" -> "node16"  // rrc_progressbar -> react_debug
+    "node53" -> "node45"  // rrc_progressbar -> react_render_componentregistry
+    "node53" -> "node32"  // rrc_progressbar -> react_render_core
+    "node53" -> "node33"  // rrc_progressbar -> react_render_debug
+    "node53" -> "node34"  // rrc_progressbar -> react_render_graphics
+    "node53" -> "node46"  // rrc_progressbar -> react_render_uimanager
+    "node53" -> "node25"  // rrc_progressbar -> reactnativejni
+    "node53" -> "node41"  // rrc_progressbar -> rrc_view
+    "node53" -> "node19"  // rrc_progressbar -> yoga
+    "node2" -> "node53"  // fabricjni -> rrc_progressbar
+    "node2" -> "node40"  // fabricjni -> rrc_root
+    "node54" [ label = "rrc_scrollview", shape = doubleoctagon ];
+    "node54" -> "node8"  // rrc_scrollview -> folly_runtime
+    "node54" -> "node11"  // rrc_scrollview -> glog
+    "node54" -> "node12"  // rrc_scrollview -> glog_init
+    "node54" -> "node13"  // rrc_scrollview -> jsi
+    "node54" -> "node16"  // rrc_scrollview -> react_debug
+    "node54" -> "node32"  // rrc_scrollview -> react_render_core
+    "node54" -> "node33"  // rrc_scrollview -> react_render_debug
+    "node54" -> "node34"  // rrc_scrollview -> react_render_graphics
+    "node54" -> "node17"  // rrc_scrollview -> react_render_mapbuffer
+    "node54" -> "node41"  // rrc_scrollview -> rrc_view
+    "node54" -> "node19"  // rrc_scrollview -> yoga
+    "node2" -> "node54"  // fabricjni -> rrc_scrollview
+    "node55" [ label = "rrc_switch", shape = octagon ];
+    "node55" -> "node7"  // rrc_switch -> fbjni::fbjni
+    "node55" -> "node8"  // rrc_switch -> folly_runtime
+    "node55" -> "node11"  // rrc_switch -> glog
+    "node55" -> "node12"  // rrc_switch -> glog_init
+    "node55" -> "node21"  // rrc_switch -> react_codegen_rncore
+    "node55" -> "node16"  // rrc_switch -> react_debug
+    "node55" -> "node45"  // rrc_switch -> react_render_componentregistry
+    "node55" -> "node32"  // rrc_switch -> react_render_core
+    "node55" -> "node33"  // rrc_switch -> react_render_debug
+    "node55" -> "node34"  // rrc_switch -> react_render_graphics
+    "node55" -> "node46"  // rrc_switch -> react_render_uimanager
+    "node55" -> "node25"  // rrc_switch -> reactnativejni
+    "node55" -> "node41"  // rrc_switch -> rrc_view
+    "node55" -> "node19"  // rrc_switch -> yoga
+    "node2" -> "node55"  // fabricjni -> rrc_switch
+    "node56" [ label = "rrc_text", shape = doubleoctagon ];
+    "node56" -> "node8"  // rrc_text -> folly_runtime
+    "node56" -> "node11"  // rrc_text -> glog
+    "node56" -> "node12"  // rrc_text -> glog_init
+    "node56" -> "node13"  // rrc_text -> jsi
+    "node56" -> "node16"  // rrc_text -> react_debug
+    "node56" -> "node48"  // rrc_text -> react_render_attributedstring
+    "node56" -> "node32"  // rrc_text -> react_render_core
+    "node56" -> "node33"  // rrc_text -> react_render_debug
+    "node56" -> "node34"  // rrc_text -> react_render_graphics
+    "node56" -> "node17"  // rrc_text -> react_render_mapbuffer
+    "node56" -> "node38"  // rrc_text -> react_render_mounting
+    "node56" -> "node51"  // rrc_text -> react_render_textlayoutmanager
+    "node56" -> "node46"  // rrc_text -> react_render_uimanager
+    "node56" -> "node18"  // rrc_text -> react_utils
+    "node56" -> "node41"  // rrc_text -> rrc_view
+    "node56" -> "node19"  // rrc_text -> yoga
+    "node2" -> "node56"  // fabricjni -> rrc_text
+    "node57" [ label = "rrc_textinput", shape = doubleoctagon ];
+    "node57" -> "node8"  // rrc_textinput -> folly_runtime
+    "node57" -> "node11"  // rrc_textinput -> glog
+    "node57" -> "node12"  // rrc_textinput -> glog_init
+    "node57" -> "node13"  // rrc_textinput -> jsi
+    "node57" -> "node16"  // rrc_textinput -> react_debug
+    "node57" -> "node48"  // rrc_textinput -> react_render_attributedstring
+    "node57" -> "node45"  // rrc_textinput -> react_render_componentregistry
+    "node57" -> "node32"  // rrc_textinput -> react_render_core
+    "node57" -> "node33"  // rrc_textinput -> react_render_debug
+    "node57" -> "node34"  // rrc_textinput -> react_render_graphics
+    "node57" -> "node37"  // rrc_textinput -> react_render_imagemanager
+    "node57" -> "node17"  // rrc_textinput -> react_render_mapbuffer
+    "node57" -> "node38"  // rrc_textinput -> react_render_mounting
+    "node57" -> "node51"  // rrc_textinput -> react_render_textlayoutmanager
+    "node57" -> "node46"  // rrc_textinput -> react_render_uimanager
+    "node57" -> "node18"  // rrc_textinput -> react_utils
+    "node57" -> "node42"  // rrc_textinput -> rrc_image
+    "node57" -> "node56"  // rrc_textinput -> rrc_text
+    "node57" -> "node41"  // rrc_textinput -> rrc_view
+    "node57" -> "node19"  // rrc_textinput -> yoga
+    "node2" -> "node57"  // fabricjni -> rrc_textinput
+    "node58" [ label = "rrc_unimplementedview", shape = doubleoctagon ];
+    "node58" -> "node8"  // rrc_unimplementedview -> folly_runtime
+    "node58" -> "node11"  // rrc_unimplementedview -> glog
+    "node58" -> "node12"  // rrc_unimplementedview -> glog_init
+    "node58" -> "node13"  // rrc_unimplementedview -> jsi
+    "node58" -> "node16"  // rrc_unimplementedview -> react_debug
+    "node58" -> "node32"  // rrc_unimplementedview -> react_render_core
+    "node58" -> "node33"  // rrc_unimplementedview -> react_render_debug
+    "node58" -> "node34"  // rrc_unimplementedview -> react_render_graphics
+    "node58" -> "node41"  // rrc_unimplementedview -> rrc_view
+    "node58" -> "node19"  // rrc_unimplementedview -> yoga
+    "node2" -> "node58"  // fabricjni -> rrc_unimplementedview
+    "node2" -> "node41"  // fabricjni -> rrc_view
+    "node2" -> "node19"  // fabricjni -> yoga
+    "node1" -> "node2"  // bridgeless -> fabricjni
+    "node1" -> "node3"  // bridgeless -> fb
+    "node59" [ label = "jserrorhandler", shape = doubleoctagon ];
+    "node59" -> "node8"  // jserrorhandler -> folly_runtime
+    "node59" -> "node13"  // jserrorhandler -> jsi
+    "node59" -> "node14"  // jserrorhandler -> mapbufferjni
+    "node1" -> "node59"  // bridgeless -> jserrorhandler
+    "node1" -> "node13"  // bridgeless -> jsi
+    "node60" [ label = "jsireact", shape = octagon ];
+    "node60" -> "node8"  // jsireact -> folly_runtime
+    "node60" -> "node11"  // jsireact -> glog
+    "node60" -> "node13"  // jsireact -> jsi
+    "node60" -> "node35"  // jsireact -> reactnative
+    "node60" -> "node28"  // jsireact -> reactperflogger
+    "node1" -> "node60"  // bridgeless -> jsireact
+    "node1" -> "node43"  // bridgeless -> turbomodulejsijni
+    "node61" [ label = "bridgelesshermes", shape = octagon ];
+    "node62" [ label = "hermes-engine::libhermes", shape = doubleoctagon ];
+    "node61" -> "node62"  // bridgelesshermes -> hermes-engine::libhermes
+    "node63" [ label = "hermes_executor_common", shape = octagon ];
+    "node63" -> "node62"  // hermes_executor_common -> hermes-engine::libhermes
+    "node64" [ label = "hermes_inspector_modern", shape = octagon ];
+    "node64" -> "node3"  // hermes_inspector_modern -> fb
+    "node64" -> "node7"  // hermes_inspector_modern -> fbjni::fbjni
+    "node65" [ label = "folly_futures", shape = octagon ];
+    "node65" -> "node0"  // folly_futures -> boost
+    "node65" -> "node9"  // folly_futures -> double-conversion
+    "node66" [ label = "event", shape = octagon ];
+    "node67" [ label = "c", shape = septagon ];
+    "node66" -> "node67"  // event -> c
+    "node65" -> "node66"  // folly_futures -> event
+    "node65" -> "node10"  // folly_futures -> fmt
+    "node65" -> "node8"  // folly_futures -> folly_runtime
+    "node65" -> "node11"  // folly_futures -> glog
+    "node64" -> "node65"  // hermes_inspector_modern -> folly_futures
+    "node64" -> "node8"  // hermes_inspector_modern -> folly_runtime
+    "node64" -> "node11"  // hermes_inspector_modern -> glog
+    "node64" -> "node62"  // hermes_inspector_modern -> hermes-engine::libhermes
+    "node64" -> "node13"  // hermes_inspector_modern -> jsi
+    "node64" -> "node36"  // hermes_inspector_modern -> jsinspector
+    "node63" -> "node64"  // hermes_executor_common -> hermes_inspector_modern
+    "node63" -> "node13"  // hermes_executor_common -> jsi
+    "node63" -> "node60"  // hermes_executor_common -> jsireact
+    "node61" -> "node63"  // bridgelesshermes -> hermes_executor_common
+    "node61" -> "node64"  // bridgelesshermes -> hermes_inspector_modern
+    "node61" -> "node13"  // bridgelesshermes -> jsi
+    "node61" -> "node60"  // bridgelesshermes -> jsireact
+    "node68" [ label = "bridgelessnativeviewconfig", shape = octagon ];
+    "node68" -> "node13"  // bridgelessnativeviewconfig -> jsi
+    "node69" [ label = "gmock\n(GTest::gmock)", shape = octagon ];
+    "node70" [ label = "Threads::Threads", shape = pentagon ];
+    "node71" [ label = "-pthread", shape = septagon ];
+    "node70" -> "node71" [ style = dashed ] // Threads::Threads -> -pthread
+    "node69" -> "node70"  // gmock -> Threads::Threads
+    "node72" [ label = "gtest\n(GTest::gtest)", shape = octagon ];
+    "node72" -> "node70"  // gtest -> Threads::Threads
+    "node69" -> "node72"  // gmock -> gtest
+    "node73" [ label = "gmock_main\n(GTest::gmock_main)", shape = octagon ];
+    "node73" -> "node70"  // gmock_main -> Threads::Threads
+    "node73" -> "node69"  // gmock_main -> gmock
+    "node74" [ label = "gtest_main\n(GTest::gtest_main)", shape = octagon ];
+    "node74" -> "node70"  // gtest_main -> Threads::Threads
+    "node74" -> "node72"  // gtest_main -> gtest
+    "node75" [ label = "hermes_executor", shape = doubleoctagon ];
+    "node75" -> "node3"  // hermes_executor -> fb
+    "node75" -> "node7"  // hermes_executor -> fbjni::fbjni
+    "node75" -> "node8"  // hermes_executor -> folly_runtime
+    "node75" -> "node62"  // hermes_executor -> hermes-engine::libhermes
+    "node75" -> "node63"  // hermes_executor -> hermes_executor_common
+    "node75" -> "node13"  // hermes_executor -> jsi
+    "node75" -> "node60"  // hermes_executor -> jsireact
+    "node75" -> "node25"  // hermes_executor -> reactnativejni
+    "node76" [ label = "hermesinstancejni", shape = doubleoctagon ];
+    "node76" -> "node61"  // hermesinstancejni -> bridgelesshermes
+    "node76" -> "node7"  // hermesinstancejni -> fbjni::fbjni
+    "node76" -> "node62"  // hermesinstancejni -> hermes-engine::libhermes
+    "node77" [ label = "rninstance", shape = doubleoctagon ];
+    "node77" -> "node1"  // rninstance -> bridgeless
+    "node77" -> "node2"  // rninstance -> fabricjni
+    "node77" -> "node3"  // rninstance -> fb
+    "node77" -> "node7"  // rninstance -> fbjni::fbjni
+    "node77" -> "node13"  // rninstance -> jsi
+    "node77" -> "node43"  // rninstance -> turbomodulejsijni
+    "node76" -> "node77"  // hermesinstancejni -> rninstance
+    "node78" [ label = "jscexecutor", shape = doubleoctagon ];
+    "node78" -> "node3"  // jscexecutor -> fb
+    "node78" -> "node7"  // jscexecutor -> fbjni::fbjni
+    "node78" -> "node8"  // jscexecutor -> folly_runtime
+    "node79" [ label = "jscruntime", shape = octagon ];
+    "node79" -> "node8"  // jscruntime -> folly_runtime
+    "node79" -> "node11"  // jscruntime -> glog
+    "node80" [ label = "jsc", shape = doubleoctagon ];
+    "node79" -> "node80"  // jscruntime -> jsc
+    "node79" -> "node13"  // jscruntime -> jsi
+    "node78" -> "node79"  // jscexecutor -> jscruntime
+    "node78" -> "node13"  // jscexecutor -> jsi
+    "node78" -> "node60"  // jscexecutor -> jsireact
+    "node78" -> "node25"  // jscexecutor -> reactnativejni
+    "node81" [ label = "unwind", shape = septagon ];
+    "node78" -> "node81"  // jscexecutor -> unwind
+    "node82" [ label = "jscinstance", shape = doubleoctagon ];
+    "node82" -> "node1"  // jscinstance -> bridgeless
+    "node82" -> "node7"  // jscinstance -> fbjni::fbjni
+    "node82" -> "node79"  // jscinstance -> jscruntime
+    "node82" -> "node25"  // jscinstance -> reactnativejni
+    "node83" [ label = "jsijniprofiler", shape = doubleoctagon ];
+    "node83" -> "node3"  // jsijniprofiler -> fb
+    "node83" -> "node7"  // jsijniprofiler -> fbjni::fbjni
+    "node83" -> "node8"  // jsijniprofiler -> folly_runtime
+    "node83" -> "node62"  // jsijniprofiler -> hermes-engine::libhermes
+    "node83" -> "node13"  // jsijniprofiler -> jsi
+    "node83" -> "node60"  // jsijniprofiler -> jsireact
+    "node83" -> "node25"  // jsijniprofiler -> reactnativejni
+    "node84" [ label = "react_newarchdefaults", shape = doubleoctagon ];
+    "node84" -> "node2"  // react_newarchdefaults -> fabricjni
+    "node84" -> "node7"  // react_newarchdefaults -> fbjni::fbjni
+    "node84" -> "node13"  // react_newarchdefaults -> jsi
+    "node84" -> "node21"  // react_newarchdefaults -> react_codegen_rncore
+    "node84" -> "node22"  // react_newarchdefaults -> react_nativemodule_core
+    "node85" [ label = "react_render_element", shape = doubleoctagon ];
+    "node85" -> "node8"  // react_render_element -> folly_runtime
+    "node85" -> "node11"  // react_render_element -> glog
+    "node85" -> "node45"  // react_render_element -> react_render_componentregistry
+    "node85" -> "node32"  // react_render_element -> react_render_core
+    "node86" [ label = "reactnative_unittest", shape = egg ];
+    "node86" -> "node65" [ style = dotted ] // reactnative_unittest -> folly_futures
+    "node86" -> "node8" [ style = dotted ] // reactnative_unittest -> folly_runtime
+    "node86" -> "node11" [ style = dotted ] // reactnative_unittest -> glog
+    "node86" -> "node12" [ style = dotted ] // reactnative_unittest -> glog_init
+    "node86" -> "node74" [ style = dotted ] // reactnative_unittest -> gtest_main
+    "node86" -> "node62" [ style = dotted ] // reactnative_unittest -> hermes-engine::libhermes
+    "node86" -> "node64" [ style = dotted ] // reactnative_unittest -> hermes_inspector_modern
+    "node86" -> "node13" [ style = dotted ] // reactnative_unittest -> jsi
+    "node86" -> "node21" [ style = dotted ] // reactnative_unittest -> react_codegen_rncore
+    "node86" -> "node16" [ style = dotted ] // reactnative_unittest -> react_debug
+    "node86" -> "node44" [ style = dotted ] // reactnative_unittest -> react_render_animations
+    "node86" -> "node48" [ style = dotted ] // reactnative_unittest -> react_render_attributedstring
+    "node86" -> "node32" [ style = dotted ] // reactnative_unittest -> react_render_core
+    "node86" -> "node33" [ style = dotted ] // reactnative_unittest -> react_render_debug
+    "node86" -> "node85" [ style = dotted ] // reactnative_unittest -> react_render_element
+    "node86" -> "node34" [ style = dotted ] // reactnative_unittest -> react_render_graphics
+    "node86" -> "node17" [ style = dotted ] // reactnative_unittest -> react_render_mapbuffer
+    "node86" -> "node38" [ style = dotted ] // reactnative_unittest -> react_render_mounting
+    "node86" -> "node50" [ style = dotted ] // reactnative_unittest -> react_render_templateprocessor
+    "node86" -> "node51" [ style = dotted ] // reactnative_unittest -> react_render_textlayoutmanager
+    "node86" -> "node46" [ style = dotted ] // reactnative_unittest -> react_render_uimanager
+    "node86" -> "node18" [ style = dotted ] // reactnative_unittest -> react_utils
+    "node86" -> "node35" [ style = dotted ] // reactnative_unittest -> reactnative
+    "node86" -> "node52" [ style = dotted ] // reactnative_unittest -> rrc_modal
+    "node86" -> "node54" [ style = dotted ] // reactnative_unittest -> rrc_scrollview
+    "node86" -> "node56" [ style = dotted ] // reactnative_unittest -> rrc_text
+    "node86" -> "node41" [ style = dotted ] // reactnative_unittest -> rrc_view
+    "node86" -> "node19" [ style = dotted ] // reactnative_unittest -> yoga
+    "node87" [ label = "reactnativeblob", shape = doubleoctagon ];
+    "node87" -> "node3"  // reactnativeblob -> fb
+    "node87" -> "node7"  // reactnativeblob -> fbjni::fbjni
+    "node87" -> "node8"  // reactnativeblob -> folly_runtime
+    "node87" -> "node13"  // reactnativeblob -> jsi
+    "node87" -> "node60"  // reactnativeblob -> jsireact
+    "node87" -> "node25"  // reactnativeblob -> reactnativejni
+    "node88" [ label = "rrc_legacyviewmanagerinterop", shape = doubleoctagon ];
+    "node88" -> "node8"  // rrc_legacyviewmanagerinterop -> folly_runtime
+    "node88" -> "node11"  // rrc_legacyviewmanagerinterop -> glog
+    "node88" -> "node12"  // rrc_legacyviewmanagerinterop -> glog_init
+    "node88" -> "node13"  // rrc_legacyviewmanagerinterop -> jsi
+    "node88" -> "node32"  // rrc_legacyviewmanagerinterop -> react_render_core
+    "node88" -> "node41"  // rrc_legacyviewmanagerinterop -> rrc_view
+    "node88" -> "node19"  // rrc_legacyviewmanagerinterop -> yoga
+    "node89" [ label = "rrc_native", shape = doubleoctagon ];
+    "node89" -> "node24"  // rrc_native -> callinvoker
+    "node89" -> "node8"  // rrc_native -> folly_runtime
+    "node89" -> "node12"  // rrc_native -> glog_init
+    "node89" -> "node13"  // rrc_native -> jsi
+    "node89" -> "node16"  // rrc_native -> react_debug
+    "node89" -> "node32"  // rrc_native -> react_render_core
+    "node89" -> "node33"  // rrc_native -> react_render_debug
+    "node89" -> "node18"  // rrc_native -> react_utils
+    "node90" [ label = "uimanagerjni", shape = doubleoctagon ];
+    "node90" -> "node68"  // uimanagerjni -> bridgelessnativeviewconfig
+    "node90" -> "node26"  // uimanagerjni -> callinvokerholder
+    "node90" -> "node3"  // uimanagerjni -> fb
+    "node90" -> "node7"  // uimanagerjni -> fbjni::fbjni
+    "node90" -> "node8"  // uimanagerjni -> folly_runtime
+    "node90" -> "node11"  // uimanagerjni -> glog
+    "node90" -> "node12"  // uimanagerjni -> glog_init
+    "node90" -> "node45"  // uimanagerjni -> react_render_componentregistry
+    "node90" -> "node25"  // uimanagerjni -> reactnativejni
+    "node90" -> "node89"  // uimanagerjni -> rrc_native
+    "node90" -> "node19"  // uimanagerjni -> yoga
+}
