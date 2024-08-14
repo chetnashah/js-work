@@ -1,62 +1,105 @@
 
-## Function subtyping
+## Naming your type parameters
 
 
-A function `A->B` exists.
-Another function `C->D` <: `A->B`, if `C` is a supertype(more general) of `A` and `D` is a subtype of `B`(more specific).
+It's common (and acceptable) in situations like this where we really don't know anything else about the Generic type parameter to use a single letter like `T`. 
 
-C can be more general than A i.e. `A <: C`, and D can be more specific than B, i.e. `D <: B`.
+But the moment you have multiple arguments (or more context for what this type will be) it's a good idea to use more descriptive names.
 
-Why?
+e.g.
+```ts
+type GroceryItem<Name, Price, InStock> = {
+  name: Name;
+  price: Price;
+  inStock: InStock;
+};
+```
 
-* Argument type - Callers can send in a type, but the function (`C->D`) can decide to work on more general strucuture (i.e. only caring about a small part of the structure). 
-* Return type - Callers expect atleast the same number of properties (`B`) of return value as the original function, or more specific is fine, i.e `D <: B`.
+## Why do we need type constraints?
 
-### How to remember this?
-1. start with return type - it has to be same or more specific, or callers will break.
-2. argument type has to be opposite - i.e. more general instead of more specific.
+Plain type parameters i.e. `T` are too loose, and we want consumers of API to do limited things with our types. 
 
-Another way people quote this - contravariant in the argument type and covariant in the return type.
+Just how terms/variables are restricted by types, to provide better guarantees about the behavior of our code, type parameters can be restricted by constraints.
 
-https://www.youtube.com/watch?v=6moaoAJui_4
+### Most likely your code is not ready to handle all types `T`, constrain its possibilities via type bounds/constraints!
 
-## in/out
-
-https://github.com/microsoft/TypeScript/pull/48240
-
-
-given a generic type `G<T>` and any two type arguments `Super` and `Sub` for which `Sub` is a subtype of `Super`, the following rules apply:
-
-* An `out` annotation indicates that a type parameter is covariant, only allowed in outputs. if `T` is covariant (declared as `out T`), `G<Sub>` is a subtype of `G<Super>`,
-
-* An `in` annotation indicates that a type parameter is contravariant, only allowed in inputs. if T is contravariant (declared as in T), `G<Super>` is a subtype of `G<Sub>`, and
-
-* An `in out` annotation indicates that a type parameter is invariant, allowed in both inputs and outputs. if T is invariant (declared as in out T), neither `G<Super>` nor `G<Sub>` is a subtype of the other.
-
+e.g.
+That means that if we make a type like this:
 
 ```ts
-type A = { p: string; };
-type B = { p: string; q: string; }; // B is a subtype of A, B <: A
+type Row<T> = {
+  value: T;
+  label: string;
+  orientation: 'vertical' | 'horizontal';
+};
+```
+A consumer of this type could pass literally anything for Row. All of these would be valid:
 
-type IsSubTypeOf<X,Y> = X extends Y ? true : false;
+```ts
+// valid but unnencessary, we should probably restrict what T can be based on ops we do on T
+type BooleanRow = Row<boolean>;
+type RegexRow = Row<RegExp>;
+type RowRowRowStringRow = Row<Row<Row<Row<string>>>>;
+type VoidFuncRow = Row<() => void>;
+```
 
-type asubtypeofb = IsSubTypeOf<A,B>; // false
-type bsubtypeofa = IsSubTypeOf<B,A>;// true
+**That's kinda what Generic type constraints are: type constraints for your parameterized types!**
 
-// -------------------------------------------
-// composite type
-type MyType<in T> = { doSomething(t: T): any }; // "in T" makes MyType invariant!
+### A better design with type constraints
 
-function doSomethingA(abc: A){
-    console.log('hi' +abc);
-}
+So, let's say that our component is advanced enough to handle three things:
+```
+string: a row with a string value
+number: a row with a numeric value
+() => string | number: a row with a lazily evaluated value that can itself be a string or a number
+```
+Let's make a type alias for our constraints:
 
-function doSomethingB(abc: B){
-    console.log('hi' +abc);
-}
-let x: MyType<A> = { doSomething: doSomethingA };
-let y: MyType<B> = { doSomething: doSomethingB };
+```ts
+type RowConstraints = string | number | (() => string | number);
+```
+Note: Function type notation must be parenthesized when used in a union type (otherwise it might be ambiguous).
 
-type mytypeasubtypeofmytypeB = IsSubTypeOf<MyType<A>,MyType<B>>; // true
-type mytypebsubtypeofmytypeA = IsSubTypeOf<MyType<B>,MyType<A>>; // false
+To tell TypeScript that we only want to allow Row to accept types that fall into one of these categories we specified in RowConstraints we use the extends keyword.
+
+```ts
+type Row<T extends RowConstraints> = {
+  value: T;
+  label: string;
+  orientation: 'vertical' | 'horizontal';
+};
+```
+Now, if we try to use our Row generic with anything that doesn't match the above, TypeScript will report an error:
+
+```ts
+type StringArrayRow = Row<string[]>;
+//                        ^?
+```
+
+### Restraining type parameters at input
+
+```ts
+// way 1 - dynamically check, but does not throw type error - checking dynamically
+// type AllowString<S> = S extends string ? string : never;
+
+// better way! - throws type error
+// way 2 checking at input of type parameter for shape
+type AllowString<String extends string> = String;
+```
+
+## Generic arrow function syntax
+
+```ts
+const identity = <T>(x: T) => x;
+```
+
+## map fn with arr
+```ts
+const mapArray = <T, U>(arr: T[], fn: (val: T, idx: number, arr: T[]) => U) => arr.map(fn);
+```
+
+## filter fn with arr (uses type predicates)
+
+```ts
+filter<S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any): S[];
 ```
