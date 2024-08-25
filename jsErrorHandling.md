@@ -1,12 +1,27 @@
 
-### JS Error object.
+## JS Error object.
 
 Main properties:
 1. name: string
 2. message: string
 3. stack: string
 
-### Capturing (current) stack trace without involving Error
+## Best practice 1 - Always throw error object instead of literals
+
+It is possible to throw literals, but it is not recommended. It is better to throw an error object.
+
+```js
+// bad
+throw 'error';
+
+// good - has stack trace
+throw new Error('error');
+```
+**Note** - to enforce this, you can use eslint rule `no-throw-literal` (https://eslint.org/docs/latest/rules/no-throw-literal)
+
+
+
+## Capturing (current) stack trace without involving Error
 
 Available in chrome and V8
 
@@ -54,7 +69,7 @@ console.log(myObj.stack);
 //    at repl:1:1 <-- Node internals below this line
 ```
 
-### What does a single stack frame like
+## What does a single stack frame like
 
 Mostly the structure is VM dependent, but there are usually common fields
  like `lineNumber`, `fileName`, `functionName` etc. for a single stack frame 
@@ -76,7 +91,7 @@ var stackFrame = new StackFrame({
  ```
 
 
-### Six built-in Error types
+## Six built-in Error types
 
 1. EvalError: using eval in an incorrect manner.
 
@@ -105,7 +120,7 @@ try {
 }
 ```
 
-#### TypeError
+### TypeError
 
 The TypeError object represents an error when an operation could not be performed, typically (but not exclusively) when a value is not of the expected type.
 
@@ -118,18 +133,18 @@ A TypeError may be thrown when:
 e.g. 
 `null.f()` or `null.k = 2;` throws a `TypeError`.
 
-#### ReferenceError
+### ReferenceError
 
 The ReferenceError object represents an error when a variable that doesn't exist (or hasn't yet been initialized) in the current scope is referenced.
 
 e.g.
 `let a = undefinedVariable`
 
-### Extending Errors for fun and profit.
+## Extending Errors for fun and profit.
 
 https://stackoverflow.com/questions/1382107/whats-a-good-way-to-extend-error-in-javascript
 
-#### ES5
+### ES5
 
 ```js
 function MyError(message) {
