@@ -12,7 +12,7 @@
     "cookie-session": "^2.0.0-beta.3",
     "ejs": "^2.5.8",
     "express": "^4.16.3",
-    "mongoose": "^5.0.14",
+    "mongoose": "^5.13.15",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0"
   }
